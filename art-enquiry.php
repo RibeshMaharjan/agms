@@ -76,23 +76,36 @@ echo "<script>window.location.href='index.php'</script>";
       <!--contact -->
       <section class="contact py-lg-4 py-md-3 py-sm-3 py-3">
          <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
-            <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Enquiry</h3>
+            <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Purchase</h3>
+            <?php
+               if($_GET['eid']){
+                  $eid = $_GET['eid'];
+                  
+                  $ret=mysqli_query($con,"select tblarttype.ID as atid,tblarttype.ArtType as typename,tblartmedium.ID as amid,tblartmedium.ArtMedium as amname,tblartproduct.ID as apid,tblartist.Name,tblartproduct.Title,tblartproduct.Dimension,tblartproduct.Orientation,tblartproduct.Size,tblartproduct.Artist,tblartproduct.ArtType,tblartproduct.ArtMedium,tblartproduct.SellingPricing,tblartproduct.Description,tblartproduct.Image,tblartproduct.Image1,tblartproduct.Image2,tblartproduct.Image3,tblartproduct.Image4,tblartproduct.RefNum,tblartproduct.ArtType from tblartproduct join tblarttype on tblarttype.ID=tblartproduct.ArtType join tblartmedium on tblartmedium.ID=tblartproduct.ArtMedium join tblartist on tblartist.ID=tblartproduct.Artist where tblartproduct.ID='$eid'");
+                  $cnt=1;
+                  
+                  $row=mysqli_fetch_array($ret);
+                  $order_id = mt_rand (10000,99999);
+               }
+            ?>
             <div class="contact-list-grid">
-               <form action="#" method="post">
+               <form action="./e-sewa.php?order_id=<?= $order_id ?>&product_amount=<?= $row['SellingPricing'] ?>" method="post">
                   <div class=" agile-wls-contact-mid">
+                     <input type="hidden" name="order_id" value="<?= $order_id ?>">
                      <div class="form-group contact-forms">
-                       <input class="form-control" type="text" name="fullname" required="true" placeholder="Name"/>
+                       <input class="form-control" type="text" name="fullname"  placeholder="Name"/>
                      </div>
                      <div class="form-group contact-forms">
-                        <input class="form-control" type="email" name="email" required="true" placeholder="Email"/>
+                        <input class="form-control" type="text" name="mobnum" maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" />
                      </div>
                      <div class="form-group contact-forms">
-                        <input class="form-control" type="text" name="mobnum" maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" required="true"/>
+                       <textarea class="form-control" name="message" placeholder="Message"  rows="4"></textarea>
                      </div>
                      <div class="form-group contact-forms">
-                       <textarea class="form-control" name="message" placeholder="Message" required="true" rows="4"></textarea>
+                        <input class="form-control" type="text" name="product_amount" placeholder="Price" value="<?= $row['SellingPricing']; ?>" required="true"/>
                      </div>
                      <button type="submit" class="btn btn-block sent-butnn" name="send">Send</button>
+                     <a href="./e-sewa.php?order_id=<?= $order_id ?>&product_amount=<?= $row['SellingPricing'] ?>">Esewa</a>
                   </div>
                </form>
             </div>
