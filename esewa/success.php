@@ -9,7 +9,7 @@
 
     // Decode the JSON string
     $response = json_decode($json_string, true);
-    
+
     if($response['status'] !== 'COMPLETE'){
         echo "transaction failed";
     }
@@ -23,13 +23,18 @@
     $array = explode(",", $message);
     $signaturemessage = "";
     foreach ($array as $value) {
-        $signaturemessage = $signaturemessage.$value.'='.$response[$value].',';
+        if ($value == 'total_amount') {
+            $amount = str_replace(',', '', $response[$value]);
+            $signaturemessage = $signaturemessage.$value.'='.$amount.',';
+        } else {
+            $signaturemessage = $signaturemessage.$value.'='.$response[$value].',';
+        }
     }
     $signaturemessage = rtrim($signaturemessage, ',');
 
     echo '<pre>'; print_r($signaturemessage); echo '</pre>';
 
-    
+
     $secret = "8gBm/:&EnhH.1/q";
     $s = hash_hmac('sha256', "$signaturemessage", $secret, true);
     $signature = base64_encode($s);
