@@ -39,14 +39,7 @@
     $s = hash_hmac('sha256', "$signaturemessage", $secret, true);
     $signature = base64_encode($s);
 
-    echo '<br>';
-    echo $s;
-    echo '<br>';
-    echo $signature;
-    echo '<br>';
-    echo $response['signature'];
-
     if ($signature == $response['signature']) {
-        // redirect('../../medicine.php','Your Order has been submitted.');
+        header('Location: ./../index.php');
     }
 ?>

@@ -4,19 +4,16 @@ include('includes/dbconnection.php');
 
 if (isset($_POST['send'])) {
    $fullname = $_POST['fullname'];
+   $email=$_POST['email'];
    $mobilenumber = $_POST['mobnum'];
-   $message = $_POST['message'];
+   $address = $_POST['address'];
    $enquirynumber = mt_rand(100000000, 999999999);
    $eid = $_GET['eid'];
-   // Generate a new UUID
-   $uuid = mysqli_query($con, "SELECT UUID() as uuid")->fetch_assoc()['uuid'];
 
-   $query1 = mysqli_query($con, "INSERT INTO tblenquiry (id, Artpdid, FullName, Email, MobileNumber, Message, EnquiryNumber) 
-                                VALUES ('$uuid', '$eid', '$fullname', '$email', '$mobilenumber', '$message', '$enquirynumber')");
+   $query1=mysqli_query($con,"insert into tblenquiry(Artpdid,FullName,Email,MobileNumber,Message,EnquiryNumber) value('$eid','$fullname','$email','$mobilenumber','$address','$enquirynumber')");
 
    if ($query1) {
-      // Use the generated UUID as the order_id
-      $order_id = $uuid;
+      $order_id = $enquirynumber;
 
       // Fetch the product amount
       $product_query = mysqli_query($con, "SELECT SellingPricing FROM tblartproduct WHERE ID='$eid'");
@@ -86,17 +83,45 @@ if (isset($_POST['send'])) {
    <!--contact -->
    <section class="contact py-lg-4 py-md-3 py-sm-3 py-3">
       <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
+      <?php
+            if(isset($_GET['eid'])){
+               $eid = $_GET['eid'];
+
+               $ret=mysqli_query($con,"select * from tblartproduct where ID = $eid;");
+               $cnt=1;
+
+               $art = mysqli_fetch_assoc($ret);
+         ?>
+            <div class="row">
+               <div class="col-lg-4 single-right-left">
+                  <div class="thumb-image">
+                     <img src="admin/images/<?= $art['Image'] ?>" alt="" class="img-fluid">
+                  </div>
+               </div>
+               <div class="col-lg-8 single-right-left simpleCart_shelfItem">
+                  <h3>Art Name: <?= $art['Title'] ?></h3>
+                  <div class="occasional">
+                     <h5>price : <?= $art['SellingPricing'] ?></h5>
+                     <h5>Description : <?= $art['Description'] ?></h5>
+                     <h5>tags : <?= $art['tags'] ?></h5>
+                  </div>
+               </div>
+            </div>
+         <?php
+            }
+         ?>
          <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Purchase</h3>
          <?php
-         if ($_GET['eid']) {
-            $eid = $_GET['eid'];
+         // if ($_GET['eid']) {
+         //    $eid = $_GET['eid'];
 
-            $ret = mysqli_query($con, "select tblarttype.ID as atid,tblarttype.ArtType as typename,tblartmedium.ID as amid,tblartmedium.ArtMedium as amname,tblartproduct.ID as apid,tblartist.Name,tblartproduct.Title,tblartproduct.Dimension,tblartproduct.Orientation,tblartproduct.Size,tblartproduct.Artist,tblartproduct.ArtType,tblartproduct.ArtMedium,tblartproduct.SellingPricing,tblartproduct.Description,tblartproduct.Image,tblartproduct.Image1,tblartproduct.Image2,tblartproduct.Image3,tblartproduct.Image4,tblartproduct.RefNum,tblartproduct.ArtType from tblartproduct join tblarttype on tblarttype.ID=tblartproduct.ArtType join tblartmedium on tblartmedium.ID=tblartproduct.ArtMedium join tblartist on tblartist.ID=tblartproduct.Artist where tblartproduct.ID='$eid'");
-            $cnt = 1;
+         //    $ret = mysqli_query($con, "select tblarttype.ID as atid,tblarttype.ArtType as typename,tblartmedium.ID as amid,tblartmedium.ArtMedium as amname,tblartproduct.ID as apid,tblartist.Name,tblartproduct.Title,tblartproduct.Dimension,tblartproduct.Orientation,tblartproduct.Size,tblartproduct.Artist,tblartproduct.ArtType,tblartproduct.ArtMedium,tblartproduct.SellingPricing,tblartproduct.Description,tblartproduct.Image,tblartproduct.Image1,tblartproduct.Image2,tblartproduct.Image3,tblartproduct.Image4,tblartproduct.RefNum,tblartproduct.ArtType from tblartproduct join tblarttype on tblarttype.ID=tblartproduct.ArtType join tblartmedium on tblartmedium.ID=tblartproduct.ArtMedium join tblartist on tblartist.ID=tblartproduct.Artist where tblartproduct.ID='$eid'");
+         //    $cnt = 1;
 
-            $row = mysqli_fetch_array($ret);
-         }
+         //    $row = mysqli_fetch_array($ret);
+         // }
          ?>
+         
          <div class="contact-list-grid">
             <form action="" method="post">
                <div class="agile-wls-contact-mid">
@@ -104,13 +129,13 @@ if (isset($_POST['send'])) {
                      <input class="form-control" type="text" name="fullname" placeholder="Name" />
                   </div>
                   <div class="form-group contact-forms">
+                     <input class="form-control" type="email" name="email" required="true" placeholder="Email"/>
+                  </div>
+                  <div class="form-group contact-forms">
                      <input class="form-control" type="text" name="mobnum" maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" />
                   </div>
                   <div class="form-group contact-forms">
-                     <textarea class="form-control" name="message" placeholder="Message" rows="4"></textarea>
-                  </div>
-                  <div class="form-group contact-forms">
-                     <input class="form-control" type="text" name="product_amount" placeholder="Price" value="<?= $row['SellingPricing']; ?>" required="true" />
+                     <textarea class="form-control" name="address" placeholder="Address" rows="4"></textarea>
                   </div>
                   <button type="submit" class="btn btn-block sent-butnn" name="send">Send</button>
                </div>
