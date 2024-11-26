@@ -14,9 +14,9 @@ if (strlen($_SESSION['agmsaid']==0)) {
 
 <head>
   
-  <link rel="shortcut icon" href="img/favicon.png">
+  
 
-  <title>Search Order | Art Gallery Management System</title>
+  <title>Pending Order | Art Gallery Management System</title>
 
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -47,11 +47,11 @@ if (strlen($_SESSION['agmsaid']==0)) {
       <section class="wrapper">
         <div class="row">
           <div class="col-lg-12">
-            <h3 class="page-header"><i class="fa fa-table"></i> Search Order</h3>
+            <h3 class="page-header"><i class="fa fa-table"></i> Pending Order</h3>
             <ol class="breadcrumb">
               <li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
               <li><i class="fa fa-table"></i>Order</li>
-              <li><i class="fa fa-th-list"></i>Search Order</li>
+              <li><i class="fa fa-th-list"></i>Pending Order</li>
             </ol>
           </div>
         </div>
@@ -60,28 +60,8 @@ if (strlen($_SESSION['agmsaid']==0)) {
           <div class="col-sm-12">
             <section class="panel">
               <header class="panel-heading">
-                Search Order
-  <form class="form-horizontal " name="search" method="post" action="" enctype="multipart/form-data">
-                
-                  <div class="form-group">
-                    <label class="col-sm-5 control-label">Search by Order Number / Name / Mobile No.</label>
-                    <div class="col-sm-7">
-                      <input class="form-control" id="searchdata" name="searchdata"  type="text" required="true">
-                    </div>
-                  </div>
-               
-                 <p style="text-align: center;"> <button type="submit" name="search" class="btn btn-primary">Submit</button></p>
-                </form>
-
+                Pending Order
               </header>
-
-<?php
-if(isset($_POST['search']))
-{ 
-
-$sdata=$_POST['searchdata'];
-  ?>
-  <h4 align="center">Result against "<?php echo $sdata;?>" keyword </h4> 
               <table class="table">
                 <thead>
                                         <tr>
@@ -92,16 +72,14 @@ $sdata=$_POST['searchdata'];
                     <th>Order Number</th>
                     <th>Full Name</th>
                     <th>Mobile Number</th>
-                    <th>Order Date</th>
+                     <th>Order Date </th>
                    
                           <th>Action</th>
                 </tr>
                                         </tr>
                                         </thead>
                <?php
-$ret=mysqli_query($con,"select *from  tblorder where (OrderNumber like '%$sdata%' || FullName like '%$sdata%' || MobileNumber like '%$sdata%')");
-$num=mysqli_num_rows($ret);
-if($num>0){
+$ret=mysqli_query($con,"select *from  tblorder where (Status='' || Status is null)");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
@@ -115,17 +93,12 @@ while ($row=mysqli_fetch_array($ret)) {
                   <td><?php  echo $row['FullName'];?></td>
                   <td><?php  echo $row['MobileNumber'];?></td>
                   <td><?php  echo $row['OrderDate'];?></td>
+                  
                   <td><a href="view-order-detail.php?viewid=<?php echo $row['ID'];?>" class="btn btn-success">View Details</a></td>
                 </tr>
                 <?php 
 $cnt=$cnt+1;
-} } else { ?>
-  <tr>
-    <td colspan="8"> No record found against this search</td>
-
-  </tr>
-   
-<?php } }?>
+}?>
               </table>
             </section>
           </div>

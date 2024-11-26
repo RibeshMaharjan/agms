@@ -57,18 +57,19 @@
           <li class="sub-menu">
             <a href="javascript:;" class="">
                           <i class="icon_table"></i>
-                          <span>Enquiry</span>
+                          <span>Order</span>
                           <span class="menu-arrow arrow_carrot-right"></span>
                       </a>
             <ul class="sub">
-              <li><a class="" href="unanswer-enquiry.php">Unanswer Enquiry</a></li>
-              <li><a class="" href="answer-enquiry.php">Answered Enquiry</a></li>
+              <li><a class="" href="pending-order.php">Pending Order</a></li>
+              <li><a class="" href="completed-order.php">Completed Order</a></li>
+              <li><a class="" href="cancelled-order.php">Cancelled Order</a></li>
             </ul>
           </li>
 <li>
             <a class="" href="search.php">
                           <i class="icon_genius"></i>
-                          <span>Search Enquiry</span>
+                          <span>Search Order</span>
                       </a>
           </li>
           <li class="sub-menu">

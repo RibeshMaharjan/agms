@@ -7,13 +7,13 @@ if (isset($_POST['send'])) {
    $email=$_POST['email'];
    $mobilenumber = $_POST['mobnum'];
    $address = $_POST['address'];
-   $enquirynumber = mt_rand(100000000, 999999999);
+   $ordernumber = mt_rand(100000000, 999999999);
    $eid = $_GET['eid'];
 
-   $query1=mysqli_query($con,"insert into tblenquiry(Artpdid,FullName,Email,MobileNumber,Message,EnquiryNumber) value('$eid','$fullname','$email','$mobilenumber','$address','$enquirynumber')");
+   $query1=mysqli_query($con,"insert into tblorder(Artpdid,FullName,Email,MobileNumber,Address,OrderNumber) value('$eid','$fullname','$email','$mobilenumber','$address','$ordernumber')");
 
    if ($query1) {
-      $order_id = $enquirynumber;
+      $order_id = $ordernumber;
 
       // Fetch the product amount
       $product_query = mysqli_query($con, "SELECT SellingPricing FROM tblartproduct WHERE ID='$eid'");

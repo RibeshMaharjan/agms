@@ -1,30 +1,53 @@
 <?php
-session_start();
-error_reporting(0);
-include('includes/dbconnection.php');
-if (strlen($_SESSION['agmsaid']==0)) {
-  header('location:logout.php');
-  } else{
-   if(isset($_POST['submit']))
+
+  session_start();
+  error_reporting(0);
+  include('includes/dbconnection.php');
+
+  if (strlen($_SESSION['agmsaid']==0))
   {
-    
-    $cid=$_GET['viewid'];
-      $remark=$_POST['remark'];
-      $status='Answer';
-     
-   $query=mysqli_query($con, "update  tblenquiry set AdminRemark='$remark',Status='$status' where ID='$cid'");
-    if ($query) {
-    
-    echo '<script>alert("Remarks has been updated")</script>';
-  }
+    header('location:logout.php');
+  } 
   else
+  {
+    if(isset($_POST['approve']))
     {
-      echo '<script>alert("Something Went Wrong. Please try again")</script>';
+      
+      $cid=$_GET['viewid'];
+      $remark=$_POST['remark'];
+      $status='Approved';
+      
+      $query=mysqli_query($con, "update  tblorder set AdminRemark='$remark', Status='$status' where ID='$cid'");
+      if ($query) {
+        echo '<script>alert("Order has been Approved")</script>';
+      }
+      else
+      {
+        echo '<script>alert("Something Went Wrong. Please try again")</script>';
+      }
+      header(header: "Location: " . $_SERVER['PHP_SELF'] . "?viewid=$cid");
+
     }
+    if(isset($_POST['cancel']))
+    {
+      $cid=$_GET['viewid'];
+      $remark=$_POST['remark'];
+      $status='Cancelled';
+            
+      $query=mysqli_query($con, "update  tblorder set AdminRemark='$remark', Status='$status' where ID='$cid'");
+      if ($query) {
+        echo '<script>alert("Order has been cancelled")</script>';
+        unset($_POST['cancel']);
+      }
+      else
+      {
+        echo '<script>alert("Something Went Wrong. Please try again")</script>';
+      }
+      header(header: "Location: " . $_SERVER['PHP_SELF'] . "?viewid=$cid");
 
+    }
+    
   
-} 
-
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +57,7 @@ if (strlen($_SESSION['agmsaid']==0)) {
   
   <link rel="shortcut icon" href="img/favicon.png">
 
-  <title>View Enquiry | Art Gallery Management System</title>
+  <title>View Order | Art Gallery Management System</title>
 
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -65,11 +88,11 @@ if (strlen($_SESSION['agmsaid']==0)) {
       <section class="wrapper">
         <div class="row">
           <div class="col-lg-12">
-            <h3 class="page-header"><i class="fa fa-table"></i>View Enquiry</h3>
+            <h3 class="page-header"><i class="fa fa-table"></i>View Order</h3>
             <ol class="breadcrumb">
               <li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
-              <li><i class="fa fa-table"></i>Enquiry</li>
-              <li><i class="fa fa-th-list"></i>View Enquiry</li>
+              <li><i class="fa fa-table"></i>Order</li>
+              <li><i class="fa fa-th-list"></i>View Order</li>
             </ol>
           </div>
         </div>
@@ -78,22 +101,22 @@ if (strlen($_SESSION['agmsaid']==0)) {
           <div class="col-sm-12">
             <section class="panel">
               <header class="panel-heading">
-                View Enquiry Details
+                View Order Details
               </header>
               
   <?php
  $cid=$_GET['viewid'];
-$ret=mysqli_query($con,"select tblartproduct.*,tblenquiry.* from tblenquiry 
-  join tblartproduct on tblartproduct.ID=tblenquiry.Artpdid 
-  where tblenquiry.ID='$cid'");
+$ret=mysqli_query($con,"select tblartproduct.*,tblorder.* from tblorder 
+  join tblartproduct on tblartproduct.ID=tblorder.Artpdid 
+  where tblorder.ID='$cid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
                <table border="1" class="table table-bordered mg-b-0">
       <tr>
-                                <th>Enquiry Number</th>
-                                   <td colspan="3"><?php  echo $row['EnquiryNumber'];?></td>
+                                <th>Order Number</th>
+                                   <td colspan="3"><?php  echo $row['OrderNumber'];?></td>
                                    </tr> 
    <tr>
                                 <th>Full Name</th>
@@ -115,25 +138,26 @@ while ($row=mysqli_fetch_array($ret)) {
                                 <th>MobileNumber</th>
                                    <td><?php  echo $row['MobileNumber'];?></td>
                                     
-                                       <th>Enquiry Date</th>
-                                        <td><?php  echo $row['EnquiryDate'];?></td>
+                                       <th>Order Date</th>
+                                        <td><?php  echo $row['OrderDate'];?></td>
                                    </tr>
                                    <tr>
-                                    <th>Message</th>
-                                      <td><?php  echo $row['Message'];?></td>
+                                    <th>Address</th>
+                                      <td><?php  echo $row['Address'];?></td>
       
     <th>Status</th>
-    <td> <?php  
-if($row['Status']=="")
-{
-  echo "Unanswer Enquiry";
-}
-if($row['Status']=="Answer")
-{
-  echo "Answer Enquiry";
-}
-
-     ;?></td>
+    <td> 
+      <?php  
+        if($row['Status']=="")
+        {
+          echo "N/A";
+        }
+        else
+        {
+          echo $row['Status'];
+        }
+      ;?>
+    </td>
   </tr>
 
 
@@ -153,31 +177,29 @@ if($row['Status']=="Answer")
  
 
   <tr align="center">
-    <td colspan="2"><button type="submit" name="submit" class="btn btn-primary btn-sm"><i class="fa fa-dot-circle-o"></i> Update</button></td>
+    <td colspan="2">
+      <button type="submit" name="approve" class="btn btn-primary btn-sm"><i class="fa fa-dot-circle-o"></i> Approve</button>
+      <button type="submit" name="cancel" class="btn btn-danger btn-sm"><i class="fa fa-dot-circle-o"></i> Cancel</button>
+    </td>
   </tr>
   </form>
 <?php } else { ?>
 
   <tr>
-    <th>Remark</th>
-    <td colspan="3"><?php echo $row['AdminRemark']; ?></td>
+    <th>Order date</th>
+    <td colspan="3"> <?php echo $row['AdminRemarkdate']; ?>  </td>
   </tr>
 
-
-<tr>
-<th>Remark date</th>
-<td colspan="3"> <?php echo $row['AdminRemarkdate']; ?>  </td></tr>
-<?php } ?>
-
-
-
-  
-
-  
+  <tr>
+    <th>Admin Remark</th>
+    <td colspan="3"><?php  echo $row['AdminRemark']; ?></td>
+  </tr>
 
 <?php } ?>
-       
-          </table>
+
+
+</table>
+<?php } ?>
         </section>
           </div>
        

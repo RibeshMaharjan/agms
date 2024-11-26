@@ -92,23 +92,23 @@ $artcount=mysqli_num_rows($query);
 
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div class="info-box brown-bg">
-              <?php $query1=mysqli_query($con,"Select * from tblenquiry where Status='' || Status is null");
+              <?php $query1=mysqli_query($con,"Select * from tblorder where Status='' || Status is null");
 $uenqcount=mysqli_num_rows($query1);
 ?>
               <i class="fa fa-file"></i>
               <div class="count"><?php echo $uenqcount;?></div>
-              <div class="title"> <a class="dropdown-item" href="unanswer-enquiry.php">Total Unanswer Enquiry</a></div>
+              <div class="title"> <a class="dropdown-item" href="pending-order.php">Total Pending Order</a></div>
             </div>
             <!--/.info-box-->
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div class="info-box brown-bg">
-              <?php $query1=mysqli_query($con,"Select * from tblenquiry where Status='Answer'");
+              <?php $query1=mysqli_query($con,"Select * from tblorder where Status='Approved'");
 $aenqcount=mysqli_num_rows($query1);
 ?>
               <i class="fa fa-file"></i>
               <div class="count"><?php echo $aenqcount;?></div>
-              <div class="title"> <a class="dropdown-item" href="answer-enquiry.php">Total Answer Enquiry</a></div>
+              <div class="title"> <a class="dropdown-item" href="completed-order.php">Total Completed Order</a></div>
             </div>
             <!--/.info-box-->
           </div>
