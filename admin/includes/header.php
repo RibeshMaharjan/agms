@@ -29,7 +29,7 @@ $name=$row['AdminName'];
           <!-- alert notification start-->
           <li id="alert_notificatoin_bar" class="dropdown">
             <?php                                        
-$ret1=mysqli_query($con,"select *from  tblenquiry where (Status='' ||  Status is null)");
+$ret1=mysqli_query($con,"select *from  tblorder where (Status='' ||  Status is null)");
 $num1=mysqli_num_rows($ret1);?>
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
@@ -46,15 +46,15 @@ $num1=mysqli_num_rows($ret1);?>
 if($num1>0)    {                                 
 while ($row1=mysqli_fetch_array($ret1)) { ?>
        <li>
-                <a href="view-enquiry-detail.php?viewid=<?php echo $row1['ID'];?>">
+                <a href="view-order-detail.php?viewid=<?php echo $row1['ID'];?>">
                                     <span class="label label-primary"><i class="icon_profile"></i></span>
-                                    New Enquiry <?php echo $row1['FullName'];?>
+                                    New Order <?php echo $row1['FullName'];?>
                                     <span class="small italic pull-right"></span>
                                 </a>
               </li>
                                           
 <?php }} else{ ?>
-<p align="center">No Enquiry found</p>
+<p align="center">No Order found</p>
 
 <?php } ?>
             

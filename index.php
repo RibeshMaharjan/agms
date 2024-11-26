@@ -39,6 +39,8 @@ include('includes/dbconnection.php');
    </head>
    <body>
       <?php include_once('includes/header.php');?>
+
+      
       <div class="slider text-center">
             <div class="callbacks_container">
                <ul class="rslides" id="slider4">
@@ -310,5 +312,17 @@ while ($row=mysqli_fetch_array($ret)) {
       <!--bootstrap working-->
       <script src="js/bootstrap.min.js"></script>
       <!-- //bootstrap working-->
+      <?php 
+         if(isset($_GET['purchaseStatus'])) {
+            switch($_GET['purchaseStatus']) {
+               case 'success':
+                  echo '<script>alert("Purchase Success");</script>';
+                  break;
+               case 'failure':
+                  echo '<script>alert("Purchase Failed");</script>';
+                  break;
+            }
+         };
+      ?>
    </body>
 </html>

@@ -13,10 +13,7 @@ if (strlen($_SESSION['agmsaid']==0)) {
 <html lang="en">
 
 <head>
-  
-  
-
-  <title>Unanswer Enquiry | Art Gallery Management System</title>
+  <title>Cancelled Order | Art Gallery Management System</title>
 
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -47,11 +44,11 @@ if (strlen($_SESSION['agmsaid']==0)) {
       <section class="wrapper">
         <div class="row">
           <div class="col-lg-12">
-            <h3 class="page-header"><i class="fa fa-table"></i> Unanswer Enquiry</h3>
+            <h3 class="page-header"><i class="fa fa-table"></i> Cancelled Order</h3>
             <ol class="breadcrumb">
               <li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
-              <li><i class="fa fa-table"></i>Enquiry</li>
-              <li><i class="fa fa-th-list"></i>Unanswer Enquiry</li>
+              <li><i class="fa fa-table"></i>Order</li>
+              <li><i class="fa fa-th-list"></i>Cancelled Order</li>
             </ol>
           </div>
         </div>
@@ -60,7 +57,7 @@ if (strlen($_SESSION['agmsaid']==0)) {
           <div class="col-sm-12">
             <section class="panel">
               <header class="panel-heading">
-                Unanswer Enquiry
+                Cancelled Order
               </header>
               <table class="table">
                 <thead>
@@ -69,17 +66,17 @@ if (strlen($_SESSION['agmsaid']==0)) {
                   <th>S.NO</th>
             
                  
-                    <th>Enquiry Number</th>
+                    <th>Order Number</th>
                     <th>Full Name</th>
                     <th>Mobile Number</th>
-                     <th>Enquiry Date </th>
+                    <th>Order Date</th>
                    
                           <th>Action</th>
                 </tr>
                                         </tr>
                                         </thead>
                <?php
-$ret=mysqli_query($con,"select *from  tblenquiry where (Status='' || Status is null)");
+$ret=mysqli_query($con,"select *from  tblorder where Status='Cancelled'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
@@ -89,12 +86,12 @@ while ($row=mysqli_fetch_array($ret)) {
                   <td><?php echo $cnt;?></td>
             
                  
-                  <td><?php  echo $row['EnquiryNumber'];?></td>
+                  <td><?php  echo $row['OrderNumber'];?></td>
                   <td><?php  echo $row['FullName'];?></td>
                   <td><?php  echo $row['MobileNumber'];?></td>
-                  <td><?php  echo $row['EnquiryDate'];?></td>
+                  <td><?php  echo $row['OrderDate'];?></td>
                   
-                  <td><a href="view-enquiry-detail.php?viewid=<?php echo $row['ID'];?>" class="btn btn-success">View Details</a></td>
+                  <td><a href="view-order-detail.php?viewid=<?php echo $row['ID'];?>" class="btn btn-success">View Details</a></td>
                 </tr>
                 <?php 
 $cnt=$cnt+1;
