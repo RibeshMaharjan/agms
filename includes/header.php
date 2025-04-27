@@ -64,9 +64,30 @@ while ($row=mysqli_fetch_array($ret)) {
                      <li class="nav-item">
                         <a href="contact.php" class="nav-link">Contact</a>
                      </li>
+                     <?php if(strlen($_SESSION['agmsuid'])==0) { ?>
+                     <li class="nav-item">
+                        <a href="login.php" class="nav-link">Login</a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="register.php" class="nav-link">Register</a>
+                     </li>
+                     <?php } else { ?>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Account
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                           <a class="nav-link" href="my-profile.php">My Profile</a>
+                           <a class="nav-link" href="change-password.php">Change Password</a>
+                           <a class="nav-link" href="logout.php">Logout</a>
+                        </div>
+                     </li>
+                     <?php } ?>
+                     <?php if(strlen($_SESSION['agmsuid'])==0) { ?>
                       <li class="nav-item">
                         <a href="admin/login.php" class="nav-link">Admin</a>
                      </li>
+                     <?php } ?>
                   </ul>
                </div>
             </nav>
