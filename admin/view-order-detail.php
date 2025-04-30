@@ -46,10 +46,7 @@
       header(header: "Location: " . $_SERVER['PHP_SELF'] . "?viewid=$cid");
 
     }
-    
-  
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -103,108 +100,85 @@
               <header class="panel-heading">
                 View Order Details
               </header>
-              
-  <?php
- $cid=$_GET['viewid'];
-$ret=mysqli_query($con,"select tblartproduct.*,tblorder.* from tblorder 
-  join tblartproduct on tblartproduct.ID=tblorder.Artpdid 
-  where tblorder.ID='$cid'");
-$cnt=1;
-while ($row=mysqli_fetch_array($ret)) {
+              <?php
+                $cid=$_GET['viewid'];
+                $ret=mysqli_query($con,"select tblartproduct.*,tblorder.* from tblorder 
+                  join tblartproduct on tblartproduct.ID=tblorder.Artpdid 
+                  where tblorder.ID='$cid'");
+                $cnt=1;
+                while ($row=mysqli_fetch_array($ret)) {
+              ?>
+              <table border="1" class="table table-bordered mg-b-0">
+                <tr>
+                  <th>Order Number</th>
+                  <td colspan="3"><?php  echo $row['OrderNumber'];?></td>
+                </tr> 
+                <tr>
+                  <th>Full Name</th>
+                  <td><?php  echo $row['FullName'];?></td>
 
-?>
-               <table border="1" class="table table-bordered mg-b-0">
-      <tr>
-                                <th>Order Number</th>
-                                   <td colspan="3"><?php  echo $row['OrderNumber'];?></td>
-                                   </tr> 
-   <tr>
-                                <th>Full Name</th>
-                                   <td><?php  echo $row['FullName'];?></td>
-                             
-                                <th>Art Name</th>
-                                   <td><?php  echo $row['Title'];?><br />
-                                     <a href="edit-art-product-detail.php?editid=<?php echo $row['Artpdid'];?>"  target="_blank">View Details</a>
-                                   </td>
-                                   </tr>  
-                                   <tr>
-                                <th>Art Reference Number</th>
-                                   <td><?php  echo $row['RefNum'];?></td>
+                  <th>Art Name</th>
+                  <td><?php  echo $row['Title'];?><br /><a href="edit-art-product-detail.php?editid=<?php echo $row['Artpdid'];?>"  target="_blank">View Details</a></td>
+                </tr>  
+                <tr>
+                  <th>Art Reference Number</th>
+                  <td><?php  echo $row['RefNum'];?></td>
 
-                                <th>Email</th>
-                                   <td><?php  echo $row['Email'];?></td>
-                                 </tr>
-                          <tr>  
-                                <th>MobileNumber</th>
-                                   <td><?php  echo $row['MobileNumber'];?></td>
-                                    
-                                       <th>Order Date</th>
-                                        <td><?php  echo $row['OrderDate'];?></td>
-                                   </tr>
-                                   <tr>
-                                    <th>Address</th>
-                                      <td><?php  echo $row['Address'];?></td>
-      
-    <th>Status</th>
-    <td> 
-      <?php  
-        if($row['Status']=="")
-        {
-          echo "N/A";
-        }
-        else
-        {
-          echo $row['Status'];
-        }
-      ;?>
-    </td>
-  </tr>
+                  <th>Email</th>
+                  <td><?php  echo $row['Email'];?></td>
+                </tr>
+                <tr>  
+                  <th>MobileNumber</th>
+                  <td><?php  echo $row['MobileNumber'];?></td>
 
+                  <th>Order Date</th>
+                  <td><?php  echo $row['OrderDate'];?> </td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td><?php  echo $row['Address'];?></td>
 
-<?php if($row['Status']==""){ ?>
+                  <th>Status</th>
+                  <td> 
+                    <?php  
+                      if($row['Status']==""){
+                        echo "N/A";
+                      } else {
+                        echo $row['Status'];
+                      };
+                    ?>
+                  </td>
+                </tr>
+                <?php if($row['Status']=="Pending"){ ?>
+                  <form name="submit" method="post"> 
 
-
-<form name="submit" method="post"> 
-
-<tr>
-    <th>Remark :</th>
-    <td>
-    <textarea name="remark" placeholder="" rows="5" cols="14" class="form-control wd-450" required="true"></textarea></td>
-  </tr>
-
-
-
- 
-
-  <tr align="center">
-    <td colspan="2">
-      <button type="submit" name="approve" class="btn btn-primary btn-sm"><i class="fa fa-dot-circle-o"></i> Approve</button>
-      <button type="submit" name="cancel" class="btn btn-danger btn-sm"><i class="fa fa-dot-circle-o"></i> Cancel</button>
-    </td>
-  </tr>
-  </form>
-<?php } else { ?>
-
-  <tr>
-    <th>Order date</th>
-    <td colspan="3"> <?php echo $row['AdminRemarkdate']; ?>  </td>
-  </tr>
-
-  <tr>
-    <th>Admin Remark</th>
-    <td colspan="3"><?php  echo $row['AdminRemark']; ?></td>
-  </tr>
-
-<?php } ?>
-
-
-</table>
-<?php } ?>
-        </section>
+                  <tr>
+                    <th>Remark :</th>
+                    <td>
+                    <textarea name="remark" placeholder="" rows="5" cols="14" class="form-control wd-450" required="true"></textarea></td>
+                  </tr>
+                  <tr align="center">
+                    <td colspan="2">
+                      <button type="submit" name="approve" class="btn btn-primary btn-sm"><i class="fa fa-dot-circle-o"></i> Approve</button>
+                      <button type="submit" name="cancel" class="btn btn-danger btn-sm"><i class="fa fa-dot-circle-o"></i> Cancel</button>
+                    </td>
+                  </tr>
+                  </form>
+                <?php } else { ?>
+                  <tr>
+                    <th>Order Approved date</th>
+                    <td colspan="3"> <?php echo $row['AdminRemarkdate']; ?>  </td>
+                  </tr>
+                  <tr>
+                    <th>Admin Remark</th>
+                    <td colspan="3"><?php  echo $row['AdminRemark']; ?></td>
+                  </tr>
+                <?php } ?>
+              </table>
+              <?php } ?>
+            </section>
           </div>
-       
         </div>
-       
         <!-- page end-->
       </section>
     </section>

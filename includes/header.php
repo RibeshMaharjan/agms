@@ -78,6 +78,7 @@ while ($row=mysqli_fetch_array($ret)) {
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
                            <a class="nav-link" href="my-profile.php">My Profile</a>
+                           <a class="nav-link" href="my-orders.php">My Orders</a>
                            <a class="nav-link" href="change-password.php">Change Password</a>
                            <a class="nav-link" href="logout.php">Logout</a>
                         </div>

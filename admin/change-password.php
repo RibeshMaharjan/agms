@@ -2,29 +2,26 @@
 session_start();
 include('includes/dbconnection.php');
 error_reporting(0);
-if (strlen($_SESSION['agmsaid']==0)) {
-  header('location:logout.php');
+  if (strlen($_SESSION['agmsaid']==0)) {
+    header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
-$adminid=$_SESSION['agmsaid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tbladmin where ID='$adminid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tbladmin set Password='$newpassword' where ID='$adminid'");
-echo '<script>alert("Your password successully changed.")</script>';
-} else {
+    if(isset($_POST['submit']))
+    {
+      $adminid=$_SESSION['agmsaid'];
+      $cpassword=$_POST['currentpassword'];
+      $newpassword=$_POST['newpassword'];
 
-echo '<script>alert("Your current password is wrong.")</script>';
-}
+      $query=mysqli_query($con,"select * from tbladmin where ID='$adminid'");
+      $row=mysqli_fetch_array($query);
 
-
-
-}
-
-  
+      if(password_verify($cpassword, $row['Password'])){
+        $newpassword=password_hash($newpassword, PASSWORD_DEFAULT);
+        $ret=mysqli_query($con,"update tbladmin set Password='$newpassword' where ID='$adminid'");
+        echo '<script>alert("Your password successully changed.")</script>';
+      } else {
+        echo '<script>alert("Your current password is wrong.")</script>';
+      }
+    }
   ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,19 +43,18 @@ echo '<script>alert("Your current password is wrong.")</script>';
   <!-- Custom styles -->
   <link href="css/style.css" rel="stylesheet">
   <link href="css/style-responsive.css" rel="stylesheet" />
-<script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
+  <script type="text/javascript">
+    function checkpass()
+    {
+      if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
+      {
+        alert('New Password and Confirm Password field does not match');
+        document.changepassword.confirmpassword.focus();
+        return false;
+      }
+      return true;
+    } 
+  </script>
 </head>
 
 <body>

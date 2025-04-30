@@ -23,6 +23,17 @@
           </li>
                 <li class="sub-menu">
             <a href="javascript:;" class="">
+                          <i class="icon_desktop"></i>
+                          <span>Users</span>
+                          <span class="menu-arrow arrow_carrot-right"></span>
+                      </a>
+            <ul class="sub">
+              <li><a class="" href="add-user.php">Add User</a></li>
+              <li><a class="" href="manage-users.php">Manage Users</a></li>
+            </ul>
+          </li>
+                <li class="sub-menu">
+            <a href="javascript:;" class="">
                           <i class="icon_document_alt"></i>
                           <span>Art Type</span>
                           <span class="menu-arrow arrow_carrot-right"></span>

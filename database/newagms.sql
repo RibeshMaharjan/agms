@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 26, 2024 at 12:09 PM
--- Server version: 11.5.2-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Apr 30, 2025 at 08:22 AM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,22 +28,21 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tbladmin` (
-  `ID` int(10) NOT NULL,
+  `ID` int NOT NULL,
   `AdminName` varchar(45) DEFAULT NULL,
   `UserName` varchar(50) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
+  `MobileNumber` bigint DEFAULT NULL,
   `Email` varchar(120) DEFAULT NULL,
   `Password` varchar(120) DEFAULT NULL,
-  `AdminRegdate` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `AdminRegdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbladmin`
 --
 
 INSERT INTO `tbladmin` (`ID`, `AdminName`, `UserName`, `MobileNumber`, `Email`, `Password`, `AdminRegdate`) VALUES
-(1, 'Admin', 'admin', 987654331, 'tester1@gmail.com', '233f617d842ce6b68ebb5290f7c383ab', '2022-12-29 06:21:53'),
-(2, 'raunik', 'raunik', 9841564578, 'raunik@gmail.com', '6b9fab06647bbf3e470bedd20e5d0cab', '2024-11-26 08:30:10');
+(1, 'Admin', 'admin', 987654331, 'tester1@gmail.com', '$2y$10$qwjwI3ZHlQbF/reK6Q01SepEoCzdM2ZWNdN99D6iajcBAGkpy0XSq', '2022-12-29 06:21:53');
 
 -- --------------------------------------------------------
 
@@ -52,15 +51,15 @@ INSERT INTO `tbladmin` (`ID`, `AdminName`, `UserName`, `MobileNumber`, `Email`, 
 --
 
 CREATE TABLE `tblartist` (
-  `ID` int(10) NOT NULL,
+  `ID` int NOT NULL,
   `Name` varchar(250) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
+  `MobileNumber` bigint DEFAULT NULL,
   `Email` varchar(250) DEFAULT NULL,
-  `Education` mediumtext DEFAULT NULL,
-  `Award` mediumtext DEFAULT NULL,
+  `Education` mediumtext,
+  `Award` mediumtext,
   `Profilepic` varchar(250) DEFAULT NULL,
-  `CreationDate` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblartist`
@@ -85,10 +84,10 @@ INSERT INTO `tblartist` (`ID`, `Name`, `MobileNumber`, `Email`, `Education`, `Aw
 --
 
 CREATE TABLE `tblartmedium` (
-  `ID` int(5) NOT NULL,
+  `ID` int NOT NULL,
   `ArtMedium` varchar(250) DEFAULT NULL,
-  `CreationDate` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblartmedium`
@@ -114,25 +113,25 @@ INSERT INTO `tblartmedium` (`ID`, `ArtMedium`, `CreationDate`) VALUES
 --
 
 CREATE TABLE `tblartproduct` (
-  `ID` int(5) NOT NULL,
+  `ID` int NOT NULL,
   `Title` varchar(250) DEFAULT NULL,
   `Dimension` varchar(250) DEFAULT NULL,
   `Orientation` varchar(100) DEFAULT NULL,
   `Size` varchar(100) DEFAULT NULL,
-  `Artist` int(5) DEFAULT NULL,
-  `ArtType` int(5) DEFAULT NULL,
-  `ArtMedium` int(5) DEFAULT NULL,
+  `Artist` int DEFAULT NULL,
+  `ArtType` int DEFAULT NULL,
+  `ArtMedium` int DEFAULT NULL,
   `SellingPricing` decimal(10,0) DEFAULT NULL,
-  `Description` mediumtext DEFAULT NULL,
+  `Description` mediumtext,
   `Image` varchar(250) DEFAULT NULL,
   `Image1` varchar(250) DEFAULT NULL,
   `Image2` varchar(250) DEFAULT NULL,
   `Image3` varchar(250) DEFAULT NULL,
   `Image4` varchar(250) DEFAULT NULL,
-  `RefNum` int(10) DEFAULT NULL,
-  `CreationDate` timestamp NULL DEFAULT current_timestamp(),
+  `RefNum` int DEFAULT NULL,
+  `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `tags` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblartproduct`
@@ -169,10 +168,10 @@ INSERT INTO `tblartproduct` (`ID`, `Title`, `Dimension`, `Orientation`, `Size`, 
 --
 
 CREATE TABLE `tblarttype` (
-  `ID` int(5) NOT NULL,
+  `ID` int NOT NULL,
   `ArtType` varchar(250) DEFAULT NULL,
-  `CreationDate` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblarttype`
@@ -193,18 +192,18 @@ INSERT INTO `tblarttype` (`ID`, `ArtType`, `CreationDate`) VALUES
 --
 
 CREATE TABLE `tblorder` (
-  `ID` int(10) NOT NULL,
+  `ID` int NOT NULL,
   `OrderNumber` varchar(10) NOT NULL,
-  `Artpdid` int(9) DEFAULT NULL,
+  `Artpdid` int DEFAULT NULL,
   `FullName` varchar(120) DEFAULT NULL,
   `Email` varchar(250) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
+  `MobileNumber` bigint DEFAULT NULL,
   `Address` varchar(250) DEFAULT NULL,
-  `OrderDate` timestamp NULL DEFAULT current_timestamp(),
+  `OrderDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `Status` varchar(10) DEFAULT NULL,
-  `AdminRemark` varchar(200) NOT NULL,
-  `AdminRemarkdate` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `AdminRemark` varchar(200) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `AdminRemarkdate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -213,15 +212,15 @@ CREATE TABLE `tblorder` (
 --
 
 CREATE TABLE `tblpage` (
-  `ID` int(10) NOT NULL,
+  `ID` int NOT NULL,
   `PageType` varchar(200) DEFAULT NULL,
-  `PageTitle` mediumtext DEFAULT NULL,
-  `PageDescription` mediumtext DEFAULT NULL,
+  `PageTitle` mediumtext,
+  `PageDescription` mediumtext,
   `Email` varchar(200) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
+  `MobileNumber` bigint DEFAULT NULL,
   `UpdationDate` date DEFAULT NULL,
   `Timing` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblpage`
@@ -230,6 +229,23 @@ CREATE TABLE `tblpage` (
 INSERT INTO `tblpage` (`ID`, `PageType`, `PageTitle`, `PageDescription`, `Email`, `MobileNumber`, `UpdationDate`, `Timing`) VALUES
 (1, 'aboutus', 'About Us', '<p style=\"margin-bottom: 1.25em; white-space-collapse: preserve; border: 0px solid rgb(217, 217, 227); --tw-border-spacing-x: 0; --tw-border-spacing-y: 0; --tw-translate-x: 0; --tw-translate-y: 0; --tw-rotate: 0; --tw-skew-x: 0; --tw-skew-y: 0; --tw-scale-x: 1; --tw-scale-y: 1; --tw-pan-x: ; --tw-pan-y: ; --tw-pinch-zoom: ; --tw-scroll-snap-strictness: proximity; --tw-gradient-from-position: ; --tw-gradient-via-position: ; --tw-gradient-to-position: ; --tw-ordinal: ; --tw-slashed-zero: ; --tw-numeric-figure: ; --tw-numeric-spacing: ; --tw-numeric-fraction: ; --tw-ring-inset: ; --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: rgba(69,89,164,.5); --tw-ring-offset-shadow: 0 0 transparent; --tw-ring-shadow: 0 0 transparent; --tw-shadow: 0 0 transparent; --tw-shadow-colored: 0 0 transparent; --tw-blur: ; --tw-brightness: ; --tw-contrast: ; --tw-grayscale: ; --tw-hue-rotate: ; --tw-invert: ; --tw-saturate: ; --tw-sepia: ; --tw-drop-shadow: ; --tw-backdrop-blur: ; --tw-backdrop-brightness: ; --tw-backdrop-contrast: ; --tw-backdrop-grayscale: ; --tw-backdrop-hue-rotate: ; --tw-backdrop-invert: ; --tw-backdrop-opacity: ; --tw-backdrop-saturate: ; --tw-backdrop-sepia: ; color: rgb(55, 65, 81); font-family: Söhne, ui-sans-serif, system-ui, -apple-system, \" segoe=\"\" ui\",=\"\" roboto,=\"\" ubuntu,=\"\" cantarell,=\"\" \"noto=\"\" sans\",=\"\" sans-serif,=\"\" \"helvetica=\"\" neue\",=\"\" arial,=\"\" \"apple=\"\" color=\"\" emoji\",=\"\" \"segoe=\"\" ui=\"\" symbol\",=\"\" emoji\";=\"\" font-size:=\"\" 16px;=\"\" background-color:=\"\" rgb(247,=\"\" 247,=\"\" 248);\"=\"\">Welcome to <b>Kathmandu</b> <b>Canvas</b>, your customer-focused online destination where art takes center stage. We are dedicated to connecting art enthusiasts with a vibrant collection of masterpieces, showcasing the rich cultural heritage and artistic talent of Nepal. Our user-friendly website offers an immersive experience, allowing you to explore captivating artworks from the comfort of your own home.</p><p style=\"margin-top: 1.25em; margin-bottom: 1.25em; white-space-collapse: preserve; border: 0px solid rgb(217, 217, 227); --tw-border-spacing-x: 0; --tw-border-spacing-y: 0; --tw-translate-x: 0; --tw-translate-y: 0; --tw-rotate: 0; --tw-skew-x: 0; --tw-skew-y: 0; --tw-scale-x: 1; --tw-scale-y: 1; --tw-pan-x: ; --tw-pan-y: ; --tw-pinch-zoom: ; --tw-scroll-snap-strictness: proximity; --tw-gradient-from-position: ; --tw-gradient-via-position: ; --tw-gradient-to-position: ; --tw-ordinal: ; --tw-slashed-zero: ; --tw-numeric-figure: ; --tw-numeric-spacing: ; --tw-numeric-fraction: ; --tw-ring-inset: ; --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: rgba(69,89,164,.5); --tw-ring-offset-shadow: 0 0 transparent; --tw-ring-shadow: 0 0 transparent; --tw-shadow: 0 0 transparent; --tw-shadow-colored: 0 0 transparent; --tw-blur: ; --tw-brightness: ; --tw-contrast: ; --tw-grayscale: ; --tw-hue-rotate: ; --tw-invert: ; --tw-saturate: ; --tw-sepia: ; --tw-drop-shadow: ; --tw-backdrop-blur: ; --tw-backdrop-brightness: ; --tw-backdrop-contrast: ; --tw-backdrop-grayscale: ; --tw-backdrop-hue-rotate: ; --tw-backdrop-invert: ; --tw-backdrop-opacity: ; --tw-backdrop-saturate: ; --tw-backdrop-sepia: ; color: rgb(55, 65, 81); font-family: Söhne, ui-sans-serif, system-ui, -apple-system, \" segoe=\"\" ui\",=\"\" roboto,=\"\" ubuntu,=\"\" cantarell,=\"\" \"noto=\"\" sans\",=\"\" sans-serif,=\"\" \"helvetica=\"\" neue\",=\"\" arial,=\"\" \"apple=\"\" color=\"\" emoji\",=\"\" \"segoe=\"\" ui=\"\" symbol\",=\"\" emoji\";=\"\" font-size:=\"\" 16px;=\"\" background-color:=\"\" rgb(247,=\"\" 247,=\"\" 248);\"=\"\">At Kathmandu Canvas, our team of art enthusiasts and experts curates a diverse range of artwork, including paintings, sculptures, photographs, and more, sourced from talented artists across Nepal. Each piece reflects the unique essence of Nepali art, whether it be the intricate details of traditional Thangka paintings, the vibrant colors of contemporary abstract art, or the serene beauty captured in landscape photography. With detailed descriptions, high-resolution images, and artist profiles, we provide the information you need to make an informed and heartfelt decision.</p>', NULL, NULL, NULL, ''),
 (2, 'contactus', 'Contact Us', '890,Sector 62, Gyan Sarovar<div>Kathmandu</div>', 'ktmgallery@gmail.com', 9818235335, NULL, '8:30 am to 7:30 pm');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblusers`
+--
+
+CREATE TABLE `tblusers` (
+  `ID` int NOT NULL,
+  `FullName` varchar(120) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  `MobileNumber` bigint DEFAULT NULL,
+  `Email` varchar(120) DEFAULT NULL,
+  `Password` varchar(120) DEFAULT NULL,
+  `RegDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Address` varchar(250) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
@@ -279,6 +295,12 @@ ALTER TABLE `tblpage`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `tblusers`
+--
+ALTER TABLE `tblusers`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -286,74 +308,51 @@ ALTER TABLE `tblpage`
 -- AUTO_INCREMENT for table `tbladmin`
 --
 ALTER TABLE `tbladmin`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tblartist`
 --
 ALTER TABLE `tblartist`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tblartmedium`
 --
 ALTER TABLE `tblartmedium`
-  MODIFY `ID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tblartproduct`
 --
 ALTER TABLE `tblartproduct`
-  MODIFY `ID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `tblarttype`
 --
 ALTER TABLE `tblarttype`
-  MODIFY `ID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tblorder`
 --
 ALTER TABLE `tblorder`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblpage`
 --
 ALTER TABLE `tblpage`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblusers`
---
-
-CREATE TABLE `tblusers` (
-  `ID` int(10) NOT NULL,
-  `FullName` varchar(120) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
-  `Email` varchar(120) DEFAULT NULL,
-  `Password` varchar(120) DEFAULT NULL,
-  `RegDate` timestamp NULL DEFAULT current_timestamp(),
-  `Address` varchar(250) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Indexes for table `tblusers`
---
-ALTER TABLE `tblusers`
-  ADD PRIMARY KEY (`ID`);
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
