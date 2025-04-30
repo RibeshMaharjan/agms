@@ -4,14 +4,22 @@ error_reporting(0);
 include('includes/dbconnection.php');
 if (strlen($_SESSION['agmsaid']==0)) {
   header('location:logout.php');
-  } else{
-  ?>
+} else {
+
+if(isset($_GET['delid']))
+{
+$rid=intval($_GET['delid']);
+$sql=mysqli_query($con,"delete from tblusers where ID='$rid'");
+ echo "<script>alert('User deleted successfully');</script>"; 
+  echo "<script>window.location.href = 'manage-users.php'</script>";     
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<title>Pending Order | Art Gallery Management System</title>
-
+  <title>Manage Users | Art Gallery Management System</title>
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- bootstrap theme -->
@@ -23,7 +31,6 @@ if (strlen($_SESSION['agmsaid']==0)) {
   <!-- Custom styles -->
   <link href="css/style.css" rel="stylesheet">
   <link href="css/style-responsive.css" rel="stylesheet" />
-
 </head>
 
 <body>
@@ -41,11 +48,11 @@ if (strlen($_SESSION['agmsaid']==0)) {
       <section class="wrapper">
         <div class="row">
           <div class="col-lg-12">
-            <h3 class="page-header"><i class="fa fa-table"></i> Pending Order</h3>
+            <h3 class="page-header"><i class="fa fa-users"></i> Manage Users</h3>
             <ol class="breadcrumb">
               <li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
-              <li><i class="fa fa-table"></i>Order</li>
-              <li><i class="fa fa-th-list"></i>Pending Order</li>
+              <li><i class="fa fa-users"></i>Users</li>
+              <li><i class="fa fa-th-list"></i>Manage Users</li>
             </ol>
           </div>
         </div>
@@ -54,47 +61,48 @@ if (strlen($_SESSION['agmsaid']==0)) {
           <div class="col-sm-12">
             <section class="panel">
               <header class="panel-heading">
-                Pending Order
+                Manage Users
               </header>
               <table class="table">
                 <thead>
                   <tr>
-                    <tr>
-                      <th>S.NO</th>
-                      <th>Order Number</th>
-                      <th>Full Name</th>
-                      <th>Mobile Number</th>
-                      <th>Order Date </th>
-                      <th>Action</th>
-                    </tr>
+                    <th>S.NO</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>Address</th>
+                    <th>Registration Date</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
+                <tbody>
                 <?php
-                  $ret=mysqli_query($con,"select *from  tblorder where (Status='Pending' || Status is null)");
-                  $cnt=1;
-                  while ($row=mysqli_fetch_array($ret)) {
-
+                $ret=mysqli_query($con,"select * from tblusers");
+                $cnt=1;
+                while ($row=mysqli_fetch_array($ret)) {
                 ?>
-                <tr>
-                  <td><?php echo $cnt;?></td>
-            
-                 
-                  <td><?php  echo $row['OrderNumber'];?></td>
-                  <td><?php  echo $row['FullName'];?></td>
-                  <td><?php  echo $row['MobileNumber'];?></td>
-                  <td><?php  echo $row['OrderDate'];?></td>
-                  
-                  <td><a href="view-order-detail.php?viewid=<?php echo $row['ID'];?>" class="btn btn-success">View Details</a></td>
-                </tr>
+                  <tr>
+                    <td><?php echo $cnt;?></td>
+                    <td><?php echo $row['FullName'];?></td>
+                    <td><?php echo $row['UserName'];?></td>
+                    <td><?php echo $row['Email'];?></td>
+                    <td><?php echo $row['MobileNumber'];?></td>
+                    <td><?php echo $row['Address'];?></td>
+                    <td><?php echo $row['RegDate'];?></td>
+                    <td>
+                      <a href="edit-user-detail.php?editid=<?php echo $row['ID'];?>" class="btn btn-success">Edit</a> || 
+                      <a href="manage-users.php?delid=<?php echo $row['ID'];?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                    </td>
+                  </tr>
                 <?php 
                 $cnt=$cnt+1;
                 }?>
+                </tbody>
               </table>
             </section>
           </div>
-       
         </div>
-       
         <!-- page end-->
       </section>
     </section>
@@ -110,9 +118,6 @@ if (strlen($_SESSION['agmsaid']==0)) {
   <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
   <!--custome script for all page-->
   <script src="js/scripts.js"></script>
-
-
 </body>
-
 </html>
-<?php }  ?>
+<?php }  ?> 

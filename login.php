@@ -3,19 +3,35 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 
+$error = '';
+
 if(isset($_POST['login']))
 {
-  $username=$_POST['username'];
-  $password=md5($_POST['password']);
-
-  $query=mysqli_query($con,"select ID from tblusers where UserName='$username' && Password='$password'");
-  $ret=mysqli_fetch_array($query);
-  if($ret>0){
-    $_SESSION['agmsuid']=$ret['ID'];
-    echo "<script type='text/javascript'> document.location ='index.php'; </script>";
-  }
-  else{
-    echo "<script>alert('Invalid Details');</script>";
+  $username = trim($_POST['username']);
+  $password = trim($_POST['password']);
+  
+  // Server-side validation
+  if(empty($username) || empty($password)) {
+    $error = "Username and password are required.";
+  } else {
+    // Sanitize inputs to prevent SQL injection
+    $username = mysqli_real_escape_string($con, $username);
+    
+    $query = mysqli_query($con, "select * from tblusers where UserName='$username'");
+    
+    if(mysqli_num_rows($query) > 0) {
+      $ret = mysqli_fetch_array($query);
+      if(password_verify($password, $ret['Password'])){
+        $_SESSION['agmsuid'] = $ret['ID'];
+        $_SESSION['agmsuname'] = $ret['UserName'];
+        $_SESSION['agmsfullname'] = $ret['FullName'];
+        echo "<script type='text/javascript'> document.location ='index.php'; </script>";
+      } else {
+        $error = "Invalid password. Please try again.";
+      }
+    } else {
+      $error = "Username not found. Please check your username or register.";
+    }
   }
 }
 ?>
@@ -31,6 +47,35 @@ if(isset($_POST['login']))
          
          function hideURLbar() {
             window.scrollTo(0, 1);
+         }
+         
+         // Form validation function
+         function validateLoginForm() {
+            var username = document.forms["loginForm"]["username"].value;
+            var password = document.forms["loginForm"]["password"].value;
+            var errorDiv = document.getElementById("clientError");
+            var isValid = true;
+            
+            // Clear previous errors
+            errorDiv.innerHTML = '';
+            errorDiv.style.display = 'none';
+            
+            if (username.trim() == "") {
+               showError("Username is required");
+               isValid = false;
+            }
+            
+            if (password.trim() == "") {
+               showError("Password is required");
+               isValid = false;
+            }
+            
+            function showError(message) {
+               errorDiv.style.display = 'block';
+               errorDiv.innerHTML += '<div class="alert alert-danger">' + message + '</div>';
+            }
+            
+            return isValid;
          }
       </script>
       <!--//meta tags ends here-->
@@ -73,18 +118,24 @@ if(isset($_POST['login']))
       <section class="contact py-lg-4 py-md-3 py-sm-3 py-3">
          <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
             <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Login</h3>
+            <div id="clientError" style="display: none;"></div>
+            <?php if(!empty($error)) { ?>
+            <div class="alert alert-danger text-center">
+               <?php echo $error; ?>
+            </div>
+            <?php } ?>
             <div class="contact-list-grid">
-               <form action="#" method="post">
+               <form action="#" method="post" name="loginForm" onsubmit="return validateLoginForm()">
                   <div class=" agile-wls-contact-mid">
                      <div class="form-group contact-forms">
-                        <input type="text" class="form-control" placeholder="Username" name="username" required="true">
+                        <input type="text" class="form-control" placeholder="Username" name="username" required="true" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
                      </div>
                      <div class="form-group contact-forms">
                         <input type="password" class="form-control" placeholder="Password" name="password" required="true">
                      </div>
                      <button type="submit" class="btn btn-block sent-butnn" name="login">Login</button>
                      <div class="mt-3 text-center">
-                        <p>Don't have an account? <a href="register.php">Register here</a></p>
+                        <p>Don't have an account? <a href="register.php" class="fw-bold text-danger">Register here</a></p>
                      </div>
                   </div>
                </form>

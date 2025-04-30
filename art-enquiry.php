@@ -3,29 +3,68 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 
+// Check if user is logged in before allowing purchase
 if (isset($_POST['send'])) {
+   // Check if user is logged in
+   if (strlen($_SESSION['agmsuid']) == 0) {
+      echo "<script>alert('Please login to make a purchase.');</script>";
+      echo "<script>window.location.href='login.php';</script>";
+      exit();
+   }
+   echo "Running";
+   
    $fullname = $_POST['fullname'];
-   $email=$_POST['email'];
+   $email = $_POST['email'];
    $mobilenumber = $_POST['mobnum'];
    $address = $_POST['address'];
-   $ordernumber = mt_rand(100000000, 999999999);
-   $eid = $_GET['eid'];
-
-   $query1=mysqli_query($con,"insert into tblorder(Artpdid,FullName,Email,MobileNumber,Address,OrderNumber) value('$eid','$fullname','$email','$mobilenumber','$address','$ordernumber')");
-
-   if ($query1) {
-      $order_id = $ordernumber;
-
-      // Fetch the product amount
-      $product_query = mysqli_query($con, "SELECT SellingPricing FROM tblartproduct WHERE ID='$eid'");
-      $product_row = mysqli_fetch_assoc($product_query);
-      $product_amount = $product_row['SellingPricing'];
-
-      // Redirect to eSewa page with order_id and product_amount
-      header("Location: ./e-sewa.php?order_id=$order_id&product_amount=$product_amount");
-      exit();
+   $eid = $_POST['eid'];
+   
+   echo "Got data";
+   // Server-side validation
+   $error = '';
+   if(empty($fullname)) {
+      $error = "Full name is required";
+   } elseif(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $error = "Valid email is required";
+   } elseif(empty($mobilenumber) || !preg_match('/^[0-9]{10}$/', $mobilenumber)) {
+      $error = "Valid 10-digit mobile number is required";
+   } elseif(empty($address)) {
+      $error = "Address is required";
    } else {
-      echo "<script>alert('Something went wrong. Please try again.');</script>";
+      echo "Validated data";
+      // Generate order number in format ORD + 6 random digits
+      $ordernumber = mt_rand(100000000, 999999999);
+      // $ordernumber = 'ORD' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+      echo "Order number generated: " . $ordernumber;
+      echo "<br>";
+      echo "Full name: " . $fullname;
+      echo "<br>";
+      echo "Email: " . $email;
+      echo "<br>";
+      echo "Mobile number: " . $mobilenumber;
+      echo "<br>";
+      echo "Address: " . $address;
+      echo "<br>";
+      echo "EID: " . $eid;
+      echo "<br>";
+      // Use prepared statement to prevent SQL injection
+      $query = mysqli_query($con,"INSERT INTO tblorder (OrderNumber, Artpdid, FullName, Email, MobileNumber, Address, Status) VALUES ('$ordernumber', '$eid', '$fullname', '$email', '$mobilenumber', '$address', 'Pending')");
+      echo "Order query prepared";
+      // $stmt->bind_param($ordernumber, $eid, $fullname, $email, $mobilenumber, $address);
+      echo "Order query prepared";
+      
+      if ($query) {
+         // Fetch the product amount
+         $product_query = mysqli_query($con, "SELECT SellingPricing FROM tblartproduct WHERE ID='$eid'");
+         $product_row = mysqli_fetch_assoc($product_query);
+         $product_amount = $product_row['SellingPricing'];
+         
+         // Redirect to eSewa page with order_id and product_amount
+         header("Location: ./e-sewa.php?order_id=$ordernumber&product_amount=$product_amount");
+         exit();
+      } else {
+         $error = "Something went wrong. Please try again.";
+      }
    }
 }
 
@@ -43,6 +82,53 @@ if (isset($_POST['send'])) {
 
       function hideURLbar() {
          window.scrollTo(0, 1);
+      }
+      
+      // Form validation function
+      function validatePurchaseForm() {
+         var fullname = document.forms["purchaseForm"]["fullname"].value;
+         var email = document.forms["purchaseForm"]["email"].value;
+         var mobilenumber = document.forms["purchaseForm"]["mobnum"].value;
+         var address = document.forms["purchaseForm"]["address"].value;
+         var errorDiv = document.getElementById("clientError");
+         var isValid = true;
+         
+         // Clear previous errors
+         errorDiv.innerHTML = '';
+         errorDiv.style.display = 'none';
+         
+         if (fullname.trim() == "") {
+            showError("Full name is required");
+            isValid = false;
+         }
+         
+         if (email.trim() == "") {
+            showError("Email is required");
+            isValid = false;
+         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError("Please enter a valid email address");
+            isValid = false;
+         }
+         
+         if (mobilenumber.trim() == "") {
+            showError("Mobile number is required");
+            isValid = false;
+         } else if (!/^\d{10}$/.test(mobilenumber)) {
+            showError("Please enter a valid 10-digit mobile number");
+            isValid = false;
+         }
+         
+         if (address.trim() == "") {
+            showError("Address is required");
+            isValid = false;
+         }
+         
+         function showError(message) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML += '<div class="alert alert-danger">' + message + '</div>';
+         }
+         
+         return isValid;
       }
    </script>
    <!--//meta tags ends here-->
@@ -105,6 +191,7 @@ if (isset($_POST['send'])) {
                      <h5>price : <?= $art['SellingPricing'] ?></h5>
                      <h5>Description : <?= $art['Description'] ?></h5>
                      <h5>tags : <?= $art['tags'] ?></h5>
+                     <h5>Gallery : <?= $_GET['eid'] ?></h5>
                   </div>
                </div>
             </div>
@@ -112,36 +199,58 @@ if (isset($_POST['send'])) {
             }
          ?>
          <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Purchase</h3>
-         <?php
-         // if ($_GET['eid']) {
-         //    $eid = $_GET['eid'];
-
-         //    $ret = mysqli_query($con, "select tblarttype.ID as atid,tblarttype.ArtType as typename,tblartmedium.ID as amid,tblartmedium.ArtMedium as amname,tblartproduct.ID as apid,tblartist.Name,tblartproduct.Title,tblartproduct.Dimension,tblartproduct.Orientation,tblartproduct.Size,tblartproduct.Artist,tblartproduct.ArtType,tblartproduct.ArtMedium,tblartproduct.SellingPricing,tblartproduct.Description,tblartproduct.Image,tblartproduct.Image1,tblartproduct.Image2,tblartproduct.Image3,tblartproduct.Image4,tblartproduct.RefNum,tblartproduct.ArtType from tblartproduct join tblarttype on tblarttype.ID=tblartproduct.ArtType join tblartmedium on tblartmedium.ID=tblartproduct.ArtMedium join tblartist on tblartist.ID=tblartproduct.Artist where tblartproduct.ID='$eid'");
-         //    $cnt = 1;
-
-         //    $row = mysqli_fetch_array($ret);
-         // }
-         ?>
          
+         <?php if(strlen($_SESSION['agmsuid']) > 0) { ?>
+         <!-- Show purchase form only if user is logged in -->
          <div class="contact-list-grid">
-            <form action="" method="post">
+            <div id="clientError" style="display: none;"></div>
+            <?php if(!empty($error)) { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+               <?php echo $error; ?>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <?php } ?>
+            <?php if(isset($_SESSION['success'])) { ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+               <?php 
+                  echo $_SESSION['success'];
+                  unset($_SESSION['success']); // Clear the success message after displaying
+               ?>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <?php } ?>
+            <form action="" method="post" name="purchaseForm" onsubmit="return validatePurchaseForm()">
                <div class="agile-wls-contact-mid">
                   <div class="form-group contact-forms">
-                     <input class="form-control" type="text" name="fullname" placeholder="Name" />
+                     <input type="hidden" name="eid" value="<?= $_GET['eid'] ?>">
+                     <input class="form-control" type="text" name="fullname" placeholder="Name" value="<?php echo isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>" />
                   </div>
                   <div class="form-group contact-forms">
-                     <input class="form-control" type="email" name="email" required="true" placeholder="Email"/>
+                     <input class="form-control" type="email" name="email" required="true" placeholder="Email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"/>
                   </div>
                   <div class="form-group contact-forms">
-                     <input class="form-control" type="text" name="mobnum" maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" />
+                     <input class="form-control" type="text" name="mobnum" maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" value="<?php echo isset($_POST['mobnum']) ? htmlspecialchars($_POST['mobnum']) : ''; ?>" />
                   </div>
                   <div class="form-group contact-forms">
-                     <textarea class="form-control" name="address" placeholder="Address" rows="4"></textarea>
+                     <textarea class="form-control" name="address" placeholder="Address" rows="4"><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
                   </div>
-                  <button type="submit" class="btn btn-block sent-butnn" name="send">Send</button>
+                  <button type="submit" class="btn btn-block sent-butnn" name="send">Purchase Now</button>
                </div>
             </form>
          </div>
+         <?php } else { ?>
+         <!-- Show login prompt if user is not logged in -->
+         <div class="text-center">
+            <h4>Please login to make a purchase</h4>
+            <p>You need to be logged in to purchase this artwork.</p>
+            <a href="login.php" class="btn sent-butnn">Login Now</a>
+            <p class="mt-3">Don't have an account? <a href="register.php" class="fw-bold text-danger">Register here</a></p>
+         </div>
+         <?php } ?>
       </div>
       <!--//contact-map -->
    </section>

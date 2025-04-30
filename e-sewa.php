@@ -18,8 +18,8 @@ $signature = base64_encode($s);
     <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
     <input type="text" id="product_service_charge" name="product_service_charge" value="0" required>
     <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
-    <input type="text" id="success_url" name="success_url" value="https://localhost/agms/esewa/success.php" required>
-    <input type="text" id="failure_url" name="failure_url" value="https://localhost/agms/esewa/failure.php" required>
+    <input type="text" id="success_url" name="success_url" value="http://localhost/agms/esewa/success.php" required>
+    <input type="text" id="failure_url" name="failure_url" value="http://localhost/agms/esewa/failure.php" required>
     <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
     <input type="text" id="signature" name="signature" value="<?= $signature ?>" required>
     <input value="Submit" type="submit">

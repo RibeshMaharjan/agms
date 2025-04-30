@@ -40,7 +40,6 @@ include('includes/dbconnection.php');
    <body>
       <?php include_once('includes/header.php');?>
 
-      
       <div class="slider text-center">
             <div class="callbacks_container">
                <ul class="rslides" id="slider4">
@@ -99,6 +98,34 @@ include('includes/dbconnection.php');
          </div>
       <!-- about -->
       <section class="about py-lg-4 py-md-3 py-sm-3 py-3" id="about">
+         <!-- Display success/error messages -->
+      <?php if(isset($_SESSION['success'])) { ?>
+      <div class="container mt-3">
+         <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php 
+               echo $_SESSION['success'];
+               unset($_SESSION['success']); // Clear the success message after displaying
+            ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+      </div>
+      <?php } ?>
+
+      <?php if(isset($_SESSION['error'])) { ?>
+      <div class="container mt-3">
+         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php 
+               echo $_SESSION['error'];
+               unset($_SESSION['error']); // Clear the error message after displaying
+            ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+      </div>
+      <?php } ?>
          <div class="container py-lg-5 py-md-5 py-sm-4 py-4">
             <h3 class="title text-center mb-lg-5 mb-md-4  mb-sm-4 mb-3">Best Products</h3>
             <div class="row banner-below-w3l">
@@ -313,16 +340,16 @@ while ($row=mysqli_fetch_array($ret)) {
       <script src="js/bootstrap.min.js"></script>
       <!-- //bootstrap working-->
       <?php 
-         if(isset($_GET['purchaseStatus'])) {
-            switch($_GET['purchaseStatus']) {
-               case 'success':
-                  echo '<script>alert("Purchase Success");</script>';
-                  break;
-               case 'failure':
-                  echo '<script>alert("Purchase Failed");</script>';
-                  break;
-            }
-         };
+         // if(isset($_GET['purchaseStatus'])) {
+         //    switch($_GET['purchaseStatus']) {
+         //       case 'success':
+         //          echo '<script>alert("Purchase Success");</script>';
+         //          break;
+         //       case 'failure':
+         //          echo '<script>alert("Purchase Failed");</script>';
+         //          break;
+         //    }
+         // };
       ?>
    </body>
 </html>
