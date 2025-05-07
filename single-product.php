@@ -115,11 +115,10 @@ while ($row=mysqli_fetch_array($ret)) {
                            <h5>Size : <?php echo $row['Size'];?></h5>
                            <h5>Dimension : <?php echo $row['Dimension'];?></h5>
                            <h5>Orientation : <?php echo $row['Orientation'];?></h5>
-                           
+                          
                         </div>
                      </div>
                      <div class="occasional">
-                        <h5>price : <?php echo $row['SellingPricing'];?></h5>
                         <h5>Art Types : <?php echo $row['typename'];?></h5>
                        
                        <h5>Art Medium : <?php echo $row['amname'];?></h5>
@@ -131,7 +130,7 @@ while ($row=mysqli_fetch_array($ret)) {
                      <div class="occasion-cart">
                         <div>
                            <h4>
-                              <button class="btn btn-success"><a href="art-enquiry.php?eid=<?php echo $row['apid'];?>" >Purchase</a></button></h4>
+                                             <button class="btn btn-success"><a href="art-enquiry.php?eid=<?php echo $row['apid'];?>" >Enquiry</a></button></h4>
                           
                         </div>
                      </div>
@@ -168,87 +167,33 @@ while ($row=mysqli_fetch_array($ret)) {
       </section>
       <!--subscribe-address-->
       <section class="py-lg-4 py-md-3 py-sm-3 py-3" style="background:hotpink">
-      <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
+         <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
             <h3 class="title clr text-start mb-lg-5">Recommended Products</h3>
-               <ul class="row list-unstyled">
-                  <li>
+            <ul class="row list-unstyled">
+               <li>                  
                   <?php
-
-                     function log_to_console($data) {
-                        $output = json_encode($data);
-
-                        echo "<script>console.log('{$output}' );</script>";
-                     }
-
-                     // Retrieved all product list from database
-                     $result = mysqli_query($con, "SELECT id, title, image, arttype, tags FROM tblartproduct");
-                     $data = [];
-
-                     while ($row = mysqli_fetch_assoc($result)) {
-                        $row['tags'] = json_decode($row['tags'], true);
-                        $data[] = $row;
-                     }
-
-                     $selectedItemId = $pid; // ID of the item to find similar recommendations for
-
-                     $selectedItem = null;
-                     foreach ($data as $item) {
-                     if ($item['id'] == $selectedItemId) {
-                        $selectedItem = $item;
-                        break;
-                     }
-                     }
-                     $recommendedArray = [];
-
-                     foreach ($data as $item) {
-                        if($item['id'] != $selectedItemId){
-                        $matchedTagsCount = 0;
-                      
-                        foreach ($item['tags'] as $tag) {
-                          foreach ($data as $selectedItem) {
-                            if ($selectedItem['id'] == $selectedItemId && in_array($tag, $selectedItem['tags'])) {
-                              $matchedTagsCount++;
-                              break;
-                            }
-                          }
-                        }
-                        if($matchedTagsCount > 0){
-                           $item['matched_tags_count'] = $matchedTagsCount;
-                           $recommendedArray[] = $item;
-                        }
-                        }
-                      }
-                      
-                      usort($recommendedArray, function($a, $b) {
-                        return $b['matched_tags_count'] - $a['matched_tags_count'];
-                      });
-                      
-                      $recommendedArray = array_slice($recommendedArray, 0, 4);
+                     include_once('includes/recommendation_functions.php');
+                     $recommendedArray = getRecommendedProducts($con, $pid);
                      // log_to_console($recommendedArray);
                       
                       // Print the recommended items
                       foreach ($recommendedArray as $row) {
                   ?>
-                        
-                        <li class="col-3">
-                   
-                           <img src="admin/images/<?php echo $row['image'];?>" style="width: 100%; height: 300px; object-fit: cover;" alt=" " />
-                           <div class="banner-right-icon">
-                              <h4 class="pt-3"><?php echo $row['title'];?></h4>
-                           </div>
-                           <div class="outs_more-buttn">
-                              <a href="art-enquiry.php?eid=<?php echo $row['id'];?>">Purchase</a>
-                              <a href="single-product.php?pid=<?php echo $row['id'];?>">View</a>
-                           </div>
-                        </li>
-                        <?php }?>
-                   
-               </ul>
-
+                  <li class="col-3">
+                     <img src="admin/images/<?php echo $row['Image'];?>" style="width: 100%; height: 300px; object-fit: cover;" alt=" " />
+                     <div class="banner-right-icon">
+                        <h4 class="pt-3"><?php echo $row['Title'];?></h4>
+                     </div>
+                     <div class="outs_more-buttn">
+                        <a href="art-enquiry.php?eid=<?php echo $row['ID'];?>">Enquiry</a>
+                        <a href="single-product.php?pid=<?php echo $row['ID'];?>">View</a>
+                     </div>
+                  </li>
+               <?php }?>
+            </ul>
          </div>
-         </section>
+      </section>
       
-  
     <?php include_once('includes/footer.php');?>
       
       <!--jQuery-->
