@@ -1,0 +1,11 @@
+.git
+.idea
+.vs
+.vscode
+.mimocode
+cnn/venv
+cnn/data
+cnn/model/weights/*.pth
+__pycache__
+*.pyc
+.pytest_cache
