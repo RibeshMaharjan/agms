@@ -76,7 +76,7 @@ def main():
 
     src = download_dataset()
 
-    possible_dirs = [src, src / "real-ai-art", src / "real_ai_art"]
+    possible_dirs = [src, src / "real-ai-art", src / "real_ai_art", src / "Real_AI_SD_LD_Dataset"]
     dataset_dir = None
     for d in possible_dirs:
         if d.exists():
