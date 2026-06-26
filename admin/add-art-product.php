@@ -2,6 +2,7 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+include_once('../includes/cnn_helper.php');
 if (strlen($_SESSION['agmsaid']==0)) {
   header('location:logout.php');
   }
@@ -72,13 +73,27 @@ $pic=md5($pic).time().$extension;
 //$pic3=md5($pic3).time().$extension3;
 //$pic4=md5($pic4).time().$extension4;
      move_uploaded_file($_FILES["images"]["tmp_name"],"images/".$pic);
+     
+     // CNN AI Image Detection
+     $cnnResult = detectAIGeneratedImage("images/" . $pic);
+     $isAIFlagged = 0;
+     if (isset($cnnResult['error'])) {
+         error_log("AI detection error for image $pic: " . $cnnResult['error']);
+     } else {
+         $isAIFlagged = $cnnResult['is_ai_generated'] ? 1 : 0;
+     }
+     
      //move_uploaded_file($_FILES["image1"]["tmp_name"],"images/".$pic1);
      //move_uploaded_file($_FILES["image2"]["tmp_name"],"images/".$pic2);
      //move_uploaded_file($_FILES["image3"]["tmp_name"],"images/".$pic3);
      //move_uploaded_file($_FILES["image4"]["tmp_name"],"images/".$pic4);
-    $query=mysqli_query($con, "insert into tblartproduct(Title,Dimension,Orientation,Size,Artist, ArtType,ArtMedium,SellingPricing,Description,Image,Image1,Image2,Image3,Image4,RefNum, tags) value('$title','$dimension','$orientation','$size','$artist','$arttype','$artmed','$sprice','$description','$pic','$pic1','$pic2','$pic3','$pic4','$refno', '$tagList')");
+    $query=mysqli_query($con, "insert into tblartproduct(Title,Dimension,Orientation,Size,Artist, ArtType,ArtMedium,SellingPricing,Description,Image,Image1,Image2,Image3,Image4,RefNum, tags, IsAIGenerated) value('$title','$dimension','$orientation','$size','$artist','$arttype','$artmed','$sprice','$description','$pic','$pic1','$pic2','$pic3','$pic4','$refno', '$tagList', '$isAIFlagged')");
     if ($query) {
-echo "<script>alert('Art product details has been submitted.');</script>";
+if ($isAIFlagged) {
+    echo "<script>alert('Warning: This image was flagged as potentially AI-generated (confidence: " . round(($cnnResult['confidence'] ?? 0) * 100, 1) . "%). Art product saved.');</script>";
+} else {
+    echo "<script>alert('Art product details has been submitted.');</script>";
+}
 echo "<script>window.location.href ='add-art-product.php'</script>";
   }
   else

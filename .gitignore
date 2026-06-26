@@ -24,3 +24,13 @@ ALGORITHMS_SUMMARY.md
 DOCUMENTATION_INDEX.md
 README_ALGORITHMS.md
 START_HERE.md
+
+# CNN / Python
+cnn/venv/
+cnn/model/weights/
+cnn/model/*.bin
+cnn/model/*.safetensors
+cnn/model/*.onnx
+__pycache__/
+*.pyc
+.pytest_cache/
