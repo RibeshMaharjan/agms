@@ -4,7 +4,7 @@ import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -15,7 +15,7 @@ from model.cnn_architecture import AIDetectionCNN
 from config import IMG_SIZE, NUM_CLASSES, NUM_EPOCHS, BATCH_SIZE, LEARNING_RATE, MODEL_SAVE_PATH
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-SCALER = GradScaler() if DEVICE.type == "cuda" else None
+SCALER = GradScaler("cuda") if DEVICE.type == "cuda" else None
 
 
 def get_transforms():
@@ -76,7 +76,7 @@ def train_one_epoch(model, loader, criterion, optimizer, epoch):
         optimizer.zero_grad()
 
         if SCALER:
-            with autocast():
+            with autocast("cuda"):
                 outputs = model(images)
                 loss = criterion(outputs, labels)
             SCALER.scale(loss).backward()
@@ -112,7 +112,7 @@ def evaluate(model, loader, criterion, epoch):
             images, labels = images.to(DEVICE), labels.to(DEVICE)
 
             if SCALER:
-                with autocast():
+                with autocast("cuda"):
                     outputs = model(images)
                     loss = criterion(outputs, labels)
             else:
