@@ -1,12 +1,17 @@
 import time
 import io
 import json
+import warnings
 import torch
 import torch.nn as nn
 from PIL import Image
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 from huggingface_hub import hf_hub_download
 from config import MODEL_NAME, CONFIDENCE_THRESHOLD
+
+warnings.filterwarnings("ignore", message=".*UNEXPECTED.*")
+warnings.filterwarnings("ignore", message=".*MISSING.*")
+warnings.filterwarnings("ignore", message=".*newly initialized.*")
 
 
 class AIDetector:
