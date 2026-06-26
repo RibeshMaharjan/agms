@@ -9,5 +9,5 @@ MODEL_SAVE_PATH = os.getenv("CNN_MODEL_SAVE_PATH", "model/weights/cnn_best.pth")
 IMG_SIZE = 224
 NUM_CLASSES = 2
 NUM_EPOCHS = 15
-BATCH_SIZE = 32
+BATCH_SIZE = int(os.getenv("CNN_BATCH_SIZE", "64"))
 LEARNING_RATE = 0.001
