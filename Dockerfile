@@ -2,6 +2,6 @@ FROM dunglas/frankenphp:latest
 
 RUN install-php-extensions mysqli curl gd
 
-COPY Caddyfile /etc/frankenphp/Caddyfile
+COPY caddyfile.d/ /etc/frankenphp/Caddyfile.d/
 
 WORKDIR /app
