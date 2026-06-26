@@ -4,3 +4,4 @@ transformers>=4.55
 torch>=2.8
 Pillow>=11.3
 pydantic>=2.11
+python-multipart
