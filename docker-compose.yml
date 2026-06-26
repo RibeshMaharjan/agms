@@ -1,10 +1,10 @@
 services:
-  frankenphp:
+  web:
     build: .
     ports:
       - "6767:80"
     volumes:
-      - .:/app
+      - .:/var/www/html
     environment:
       - DB_HOST=mariadb
       - DB_USER=chandan
