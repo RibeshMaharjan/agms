@@ -35,19 +35,27 @@ def get_transforms():
 def load_data(data_dir):
     train_tf, val_tf = get_transforms()
 
-    full_dataset = datasets.ImageFolder(data_dir)
-    total = len(full_dataset)
-    val_size = int(total * 0.15)
-    train_size = total - val_size
+    train_dir = os.path.join(data_dir, "train")
+    val_dir = os.path.join(data_dir, "val")
 
-    train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
-    train_dataset.dataset.transform = train_tf
-    val_dataset.dataset.transform = val_tf
+    if os.path.exists(train_dir) and os.path.exists(val_dir):
+        train_dataset = datasets.ImageFolder(train_dir, transform=train_tf)
+        val_dataset = datasets.ImageFolder(val_dir, transform=val_tf)
+        classes = train_dataset.classes
+    else:
+        full_dataset = datasets.ImageFolder(data_dir)
+        total = len(full_dataset)
+        val_size = int(total * 0.15)
+        train_size = total - val_size
+        train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
+        train_dataset.dataset.transform = train_tf
+        val_dataset.dataset.transform = val_tf
+        classes = full_dataset.classes
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)
 
-    return train_loader, val_loader, full_dataset.classes
+    return train_loader, val_loader, classes
 
 
 def train_one_epoch(model, loader, criterion, optimizer):
