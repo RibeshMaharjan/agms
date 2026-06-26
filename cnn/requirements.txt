@@ -2,6 +2,7 @@ fastapi>=0.116
 uvicorn>=0.35
 transformers>=4.55
 torch>=2.8
+torchvision>=0.23
 accelerate>=0.25.0
 Pillow>=11.3
 pydantic>=2.11
