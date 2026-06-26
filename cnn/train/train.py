@@ -7,6 +7,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from tqdm import tqdm
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from model.cnn_architecture import AIDetectionCNN
@@ -58,13 +59,14 @@ def load_data(data_dir):
     return train_loader, val_loader, classes
 
 
-def train_one_epoch(model, loader, criterion, optimizer):
+def train_one_epoch(model, loader, criterion, optimizer, epoch):
     model.train()
     running_loss = 0.0
     all_preds = []
     all_labels = []
 
-    for images, labels in loader:
+    pbar = tqdm(loader, desc=f"Train Epoch {epoch}", leave=False)
+    for images, labels in pbar:
         images, labels = images.to(DEVICE), labels.to(DEVICE)
 
         optimizer.zero_grad()
@@ -78,19 +80,22 @@ def train_one_epoch(model, loader, criterion, optimizer):
         all_preds.extend(preds.cpu().numpy())
         all_labels.extend(labels.cpu().numpy())
 
+        pbar.set_postfix(loss=f"{loss.item():.4f}")
+
     epoch_loss = running_loss / len(loader.dataset)
     epoch_acc = accuracy_score(all_labels, all_preds)
     return epoch_loss, epoch_acc
 
 
-def evaluate(model, loader, criterion):
+def evaluate(model, loader, criterion, epoch):
     model.eval()
     running_loss = 0.0
     all_preds = []
     all_labels = []
 
+    pbar = tqdm(loader, desc=f"Val Epoch   {epoch}", leave=False)
     with torch.no_grad():
-        for images, labels in loader:
+        for images, labels in pbar:
             images, labels = images.to(DEVICE), labels.to(DEVICE)
             outputs = model(images)
             loss = criterion(outputs, labels)
@@ -99,6 +104,8 @@ def evaluate(model, loader, criterion):
             preds = outputs.argmax(1)
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
+
+            pbar.set_postfix(loss=f"{loss.item():.4f}")
 
     epoch_loss = running_loss / len(loader.dataset)
     acc = accuracy_score(all_labels, all_preds)
@@ -132,8 +139,8 @@ def main():
     for epoch in range(NUM_EPOCHS):
         start = time.time()
 
-        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer)
-        val_loss, val_acc, val_prec, val_rec, val_f1 = evaluate(model, val_loader, criterion)
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, epoch+1)
+        val_loss, val_acc, val_prec, val_rec, val_f1 = evaluate(model, val_loader, criterion, epoch+1)
         scheduler.step(val_loss)
 
         elapsed = time.time() - start
