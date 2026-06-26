@@ -10,11 +10,11 @@
 .DS_Store
 Thumbs.db
 
-# Uploaded images (user content)
-admin/images/*.jpg
-admin/images/*.jpeg
-admin/images/*.png
-admin/images/*.gif
+## Uploaded images (user content)
+#admin/images/*.jpg
+#admin/images/*.jpeg
+#admin/images/*.png
+#admin/images/*.gif
 
 # Generated documentation
 ALGORITHMS_CHEATSHEET.md
