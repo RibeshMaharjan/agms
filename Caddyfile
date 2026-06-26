@@ -1,9 +1,8 @@
 {
     auto_https off
-    order frankenphp after file_server
 }
 
 :80 {
     root * /app
-    frankenphp
+    php
 }
