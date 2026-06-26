@@ -136,6 +136,19 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
   cursor: pointer;
 }
 
+.ai-badge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.ai-badge.human { background: #d4edda; color: #155724; }
+.ai-badge.ai { background: #f8d7da; color: #721c24; }
+.ai-badge.checking { background: #fff3cd; color: #856404; }
+.ai-badge.error { background: #e2e3e5; color: #383d41; }
+
 </style>
 </head>
 <body>
@@ -179,35 +192,40 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Featured Image</label>
                     <div class="col-sm-10">
-                       <input type="file" class="form-control" name="images" id="images" value="" required="true">
+                       <input type="file" class="form-control" name="images" id="images" value="" required="true" accept="image/*">
+                       <small class="ai-badge" id="badge-images"></small>
                     </div>
                   </div>
 
     <div class="form-group">
                     <label class="col-sm-2 control-label">Art Product Image1</label>
                     <div class="col-sm-10">
-                       <input type="file" class="form-control" name="image1" id="image1" value="">
+                       <input type="file" class="form-control" name="image1" id="image1" value="" accept="image/*">
+                       <small class="ai-badge" id="badge-image1"></small>
                     </div>
                   </div>
 
   <div class="form-group">
                     <label class="col-sm-2 control-label">Art Product Image2</label>
                     <div class="col-sm-10">
-                       <input type="file" class="form-control" name="image2" id="image2" value="">
+                       <input type="file" class="form-control" name="image2" id="image2" value="" accept="image/*">
+                       <small class="ai-badge" id="badge-image2"></small>
                     </div>
                   </div>
 
                     <div class="form-group">
                     <label class="col-sm-2 control-label">Art Product Image3</label>
                     <div class="col-sm-10">
-                       <input type="file" class="form-control" name="image3" id="image3" value="">
+                       <input type="file" class="form-control" name="image3" id="image3" value="" accept="image/*">
+                       <small class="ai-badge" id="badge-image3"></small>
                     </div>
                   </div>
 
                     <div class="form-group">
                     <label class="col-sm-2 control-label">Art Product Image4</label>
                     <div class="col-sm-10">
-                       <input type="file" class="form-control" name="image4" id="image4" value="">
+                       <input type="file" class="form-control" name="image4" id="image4" value="" accept="image/*">
+                       <small class="ai-badge" id="badge-image4"></small>
                     </div>
                   </div>
 
@@ -414,6 +432,31 @@ function createTag(tag) {
   tagContainer.appendChild(tagElement);
 }
 
+</script>
+<script>
+document.querySelectorAll('input[type="file"][id^="image"]').forEach(function(input) {
+  input.addEventListener('change', function() {
+    var badge = document.getElementById('badge-' + this.id);
+    if (!this.files[0]) { badge.textContent = ''; badge.className = 'ai-badge'; return; }
+    badge.textContent = 'Checking...';
+    badge.className = 'ai-badge checking';
+    var fd = new FormData();
+    fd.append('image', this.files[0]);
+    fetch('cnn_detect.php', { method: 'POST', body: fd })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) { badge.textContent = 'Error'; badge.className = 'ai-badge error'; return; }
+        if (data.is_ai_generated) {
+          badge.textContent = 'AI-Generated (' + (data.confidence * 100).toFixed(1) + '%)';
+          badge.className = 'ai-badge ai';
+        } else {
+          badge.textContent = 'Human (' + (data.confidence * 100).toFixed(1) + '%)';
+          badge.className = 'ai-badge human';
+        }
+      })
+      .catch(function() { badge.textContent = 'Error'; badge.className = 'ai-badge error'; });
+  });
+});
 </script>
 
 

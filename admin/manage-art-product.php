@@ -77,6 +77,7 @@ $sql=mysqli_query($con,"delete from tblartproduct where ID='$rid'");
                     <th>Image</th>
                     <th>Creation Date</th>
                     <th>Category</th>
+                    <th>AI Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -97,6 +98,7 @@ $sql=mysqli_query($con,"delete from tblartproduct where ID='$rid'");
                   <td><img src="images/<?php  echo $row['Image'];?>" width='100' height="100"></td>
                   <td><?php  echo $row['CreationDate'];?></td>
                   <td><?php  echo $arttype['ArtType'];?></td>
+                  <td><?php if ($row['IsAIGenerated']) { echo '<span class="label label-danger">AI-Generated</span>'; } else { echo '<span class="label label-success">Human</span>'; } ?></td>
                   <td><a href="edit-art-product-detail.php?editid=<?php echo $row['ID'];?>" class="btn btn-success">Edit</a> || <a href="manage-art-product.php?delid=<?php echo $row['ID'];?>" class="btn btn-danger">Delete</a></td>
                 </tr>
                 <?php 
