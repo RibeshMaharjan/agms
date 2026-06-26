@@ -27,7 +27,7 @@ services:
       - ./docker/mariadb/init.sh:/docker-entrypoint-initdb.d/init.sh
       - ./database:/docker-entrypoint-initdb.d/sql
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 5s
       timeout: 5s
       retries: 10
