@@ -1,5 +1,6 @@
 import time
 import io
+import os
 import warnings
 import torch
 from PIL import Image
@@ -7,7 +8,7 @@ from torchvision import transforms
 from timm import create_model
 from huggingface_hub import hf_hub_download
 from transformers import AutoImageProcessor, SiglipForImageClassification
-from config import MODEL_NAME, SECONDARY_MODEL, CONFIDENCE_THRESHOLD
+from config import MODEL_NAME, FINE_TUNED_MODEL, SECONDARY_MODEL, CONFIDENCE_THRESHOLD
 
 warnings.filterwarnings("ignore", message=".*bos_token_id.*")
 warnings.filterwarnings("ignore", message=".*eos_token_id.*")
@@ -33,9 +34,18 @@ class AIDetector:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def load_model(self):
-        model_path = hf_hub_download(repo_id=MODEL_NAME, filename="pytorch_model.pth")
         self.primary_model = create_model('efficientnet_b4', pretrained=False, num_classes=2)
-        self.primary_model.load_state_dict(torch.load(model_path, map_location=self.device))
+
+        if os.path.exists(FINE_TUNED_MODEL):
+            print(f"Loading fine-tuned model: {FINE_TUNED_MODEL}")
+            self.primary_model.load_state_dict(torch.load(FINE_TUNED_MODEL, map_location=self.device))
+            self.model_source = "fine-tuned"
+        else:
+            print(f"Loading base model from HuggingFace: {MODEL_NAME}")
+            model_path = hf_hub_download(repo_id=MODEL_NAME, filename="pytorch_model.pth")
+            self.primary_model.load_state_dict(torch.load(model_path, map_location=self.device))
+            self.model_source = "base"
+
         self.primary_model.to(self.device).eval()
 
         self.secondary_processor = AutoImageProcessor.from_pretrained(SECONDARY_MODEL)
@@ -113,6 +123,6 @@ class AIDetector:
                 "votes_for_ai": votes_for_ai,
                 "total_signals": total_signals
             },
-            "model": MODEL_NAME,
+            "model": f"{MODEL_NAME} ({self.model_source})",
             "processing_time_ms": elapsed_ms
         }

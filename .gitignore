@@ -27,10 +27,12 @@ START_HERE.md
 
 # CNN / Python
 cnn/venv/
+cnn/data/
 cnn/model/weights/
 cnn/model/*.bin
 cnn/model/*.safetensors
 cnn/model/*.onnx
+cnn/model/gallery_detector_best.pth
 __pycache__/
 *.pyc
 .pytest_cache/
