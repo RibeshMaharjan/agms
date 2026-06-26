@@ -1,16 +1,20 @@
 import time
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from schemas import DetectionResult, HealthResponse
 from detector import AIDetector
 from config import SERVICE_HOST, SERVICE_PORT, MAX_FILE_SIZE_MB
 
-app = FastAPI(title="GalleryNest AI Image Detection")
 detector = AIDetector()
 
 
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app):
     detector.load_model()
+    yield
+
+
+app = FastAPI(title="GalleryNest AI Image Detection", lifespan=lifespan)
 
 
 @app.get("/health", response_model=HealthResponse)
