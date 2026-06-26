@@ -73,7 +73,7 @@ if (isset($_POST['send'])) {
 <html lang="zxx">
 
 <head>
-   <title>Kathmandu Canvas</title>
+   <title>Gallery Nest</title>
 
    <script>
       addEventListener("load", function() {
@@ -157,7 +157,7 @@ if (isset($_POST['send'])) {
    <!-- short -->
    <div class="using-border py-3">
       <div class="inner_breadcrumb  ml-4">
-         <ul class="short_ls">
+         <ul class="short_ls d-flex">
             <li>
                <a href="index.php">Home</a>
                <span>/</span>
@@ -178,22 +178,31 @@ if (isset($_POST['send'])) {
                $cnt=1;
 
                $art = mysqli_fetch_assoc($ret);
-         ?>
-            <div class="row">
-               <div class="col-lg-4 single-right-left">
+         ?>            <div class="row align-items-center">
+               <div class="col-lg-4 single-right-left d-flex justify-content-center">
                   <div class="thumb-image">
                      <img src="admin/images/<?= $art['Image'] ?>" alt="" class="img-fluid">
                   </div>
                </div>
                <div class="col-lg-8 single-right-left simpleCart_shelfItem">
-                  <h3>Art Name: <?= $art['Title'] ?></h3>
-                  <div class="occasional">
-                     <h5>price : <?= $art['SellingPricing'] ?></h5>
-                     <h5>Description : <?= $art['Description'] ?></h5>
-                     <h5>tags : <?= $art['tags'] ?></h5>
-                     <h5>Gallery : <?= $_GET['eid'] ?></h5>
+                  <div class="art-details-box text-center">
+                     <h3 class="mb-3">Art Name: <?= $art['Title'] ?></h3>
+                     <div class="occasional">
+                        <h5>Price : <?= $art['SellingPricing'] ?></h5>
+                        <h5>Description : <?= $art['Description'] ?></h5>
+                        <h5>Tags : <?= $art['tags'] ?></h5>
+                        <h5>Gallery : <?= $_GET['eid'] ?></h5>
+                        <!-- Example static details, replace with dynamic if available -->
+                        <h5>Size : Medium</h5>
+                        <h5>Dimension : 70*80</h5>
+                        <h5>Orientation : Landscape</h5>
+                        <h5>Art Types : Painting</h5>
+                        <h5>Art Medium : Oil on Canvas</h5>
+                        <h5>Art Reference Number : 532238755</h5>
+                     </div>
                   </div>
                </div>
+            </div>
             </div>
          <?php
             }
@@ -202,7 +211,7 @@ if (isset($_POST['send'])) {
          
          <?php if(strlen($_SESSION['agmsuid']) > 0) { ?>
          <!-- Show purchase form only if user is logged in -->
-         <div class="contact-list-grid">
+         <div class="contact-list-grid container">
             <div id="clientError" style="display: none;"></div>
             <?php if(!empty($error)) { ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

@@ -7,7 +7,7 @@ include('includes/dbconnection.php');
 <!DOCTYPE html>
 <html lang="zxx">
    <head>
-      <title>Kathmandu Canvas</title>
+      <title>Gallery Nest</title>
     
       <script>
          addEventListener("load", function () {
@@ -44,7 +44,7 @@ include('includes/dbconnection.php');
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="algorithm
                   .html">Home</a>
@@ -74,7 +74,7 @@ while ($row=mysqli_fetch_array($ret)) {
                </div>
             </div>
             <div class="about-sub-inner text-center mt-lg-4 mt-3">
-               <h4>Kathmandu Canvas
+               <h4>Gallery Nest
                </h4>
                <div class="row">
                   <div class="col-lg-4 col-md-4 abut-gride">

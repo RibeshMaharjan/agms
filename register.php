@@ -98,6 +98,12 @@ if(isset($_POST['submit']))
                isValid = false;
             }
             
+            var fullnameRegex = /^[a-zA-Z0-9_-]*$/;
+            if (!fullnameRegex.test(fullname)) {
+               showError("Full name can only contain letters, numbers, hyphens and underscores.");
+               isValid = false;
+            }
+            
             if (username.trim() == "") {
                showError("Username is required");
                isValid = false;
@@ -178,7 +184,7 @@ if(isset($_POST['submit']))
       <link href="//fonts.googleapis.com/css?family=Sunflower:500,700" rel="stylesheet">
       <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
    </head>
-   <body>
+   <body class="register-page">
       <!--headder-->
       <?php include_once('includes/header.php');?>
       <!-- banner -->
@@ -188,7 +194,7 @@ if(isset($_POST['submit']))
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>

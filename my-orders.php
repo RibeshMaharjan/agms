@@ -15,7 +15,7 @@ $userid = $_SESSION['agmsuid'];
 <html lang="zxx">
 
 <head>
-    <title>My Orders - Kathmandu Canvas</title>
+    <title>My Orders - Gallery Nest</title>
     <script>
         addEventListener("load", function() {
             setTimeout(hideURLbar, 0);
@@ -52,7 +52,7 @@ $userid = $_SESSION['agmsuid'];
     <!-- short -->
     <div class="using-border py-3">
         <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                 <li>
                     <a href="index.php">Home</a>
                     <span>/</span>
@@ -198,4 +198,4 @@ $userid = $_SESSION['agmsuid'];
     <!-- //bootstrap working-->
 </body>
 
-</html> 
+</html>

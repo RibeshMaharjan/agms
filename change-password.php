@@ -9,16 +9,26 @@ else{
   if(isset($_POST['submit']))
   {
     $userid=$_SESSION['agmsuid'];
-    $cpassword=md5($_POST['currentpassword']);
-    $newpassword=md5($_POST['newpassword']);
-    
-    $query=mysqli_query($con,"select ID from tblusers where ID='$userid' and Password='$cpassword'");
-    $row=mysqli_fetch_array($query);
-    if($row>0){
-      $ret=mysqli_query($con,"update tblusers set Password='$newpassword' where ID='$userid'");
-      echo '<script>alert("Your password has been changed successfully.")</script>';
+    $cpassword=trim($_POST['currentpassword']);
+    $newpassword=trim($_POST['newpassword']);
+    $confirmpassword=trim($_POST['confirmpassword']);
+
+    if($newpassword !== $confirmpassword) {
+      echo '<script>alert("Invalid password. Please try again.")</script>';
+    }
+
+    $query=mysqli_query($con,"select * from tblusers where ID='$userid'");
+    if(mysqli_num_rows($query) > 0){
+      $ret = mysqli_fetch_array($query);
+      if(password_verify($cpassword, $ret['Password'])){
+        $hashedPw = password_hash($newpassword, PASSWORD_DEFAULT);
+        $ret=mysqli_query($con,"update tblusers set Password='$hashedPw' where ID='$userid'");
+        echo '<script>alert("Your password has been changed successfully.")</script>';
+      } else {
+        echo '<script>alert("Your current password is wrong.")</script>';
+      }
     } else {
-      echo '<script>alert("Your current password is wrong.")</script>';
+      echo '<script>alert("Internal Server Error")</script>';
     }
   }
 ?>
@@ -70,7 +80,7 @@ else{
    <!-- short -->
    <div class="using-border py-3">
       <div class="inner_breadcrumb  ml-4">
-         <ul class="short_ls">
+         <ul class="short_ls d-flex">
             <li>
                <a href="index.php">Home</a>
                <span>/</span>

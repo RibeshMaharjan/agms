@@ -47,7 +47,7 @@ include('includes/dbconnection.php');
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>

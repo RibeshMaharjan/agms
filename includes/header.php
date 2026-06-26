@@ -1,14 +1,13 @@
-
-         <div class="header-bar">
+<div class="header-bar">
             <div class="info-top-grid">
                <div class="info-contact-agile">
                 <?php
 
-$ret=mysqli_query($con,"select * from tblpage where PageType='contactus' ");
-$cnt=1;
-while ($row=mysqli_fetch_array($ret)) {
+                  $ret=mysqli_query($con,"select * from tblpage where PageType='contactus' ");
+                  $cnt=1;
+                  while ($row=mysqli_fetch_array($ret)) {
 
-?>
+                  ?>
                   <ul>
                      <li>
                         <span class="fas fa-phone-volume"></span>
@@ -18,15 +17,14 @@ while ($row=mysqli_fetch_array($ret)) {
                         <span class="fas fa-envelope"></span>
                         <p><?php  echo $row['Email'];?></p>
                      </li>
-                     <li>
-                     </li>
-                  </ul><?php } ?>
+                  </ul>
+                  <?php } ?>
                </div>
             </div>
             <div class="container-fluid">
                <div class="hedder-up row">
                   <div class="col-lg-3 col-md-3 logo-head">
-                     <h1><a class="navbar-brand" href="index.php">Kathmandu Canvas</a></h1>
+                     <h1><a class="navbar-brand" href="index.php">Gallery Nest</a></h1>
                   </div>
                </div>
             </div>

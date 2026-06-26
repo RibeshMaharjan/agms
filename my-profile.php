@@ -64,7 +64,7 @@ else{
    <!-- short -->
    <div class="using-border py-3">
       <div class="inner_breadcrumb  ml-4">
-         <ul class="short_ls">
+         <ul class="short_ls d-flex">
             <li>
                <a href="index.php">Home</a>
                <span>/</span>
@@ -107,10 +107,10 @@ else{
                      <label>Address</label>
                      <textarea class="form-control" name="address" required="true"><?php echo $row['Address'];?></textarea>
                   </div>
-                  <div class="form-group contact-forms">
-                     <label>Registration Date</label>
-                     <input type="text" class="form-control" value="<?php echo $row['RegDate'];?>" readonly>
-                  </div>
+<!--                  <div class="form-group contact-forms">-->
+<!--                     <label>Registration Date</label>-->
+<!--                     <input type="text" class="form-control" value="--><?php //echo $row['RegDate'];?><!--" readonly>-->
+<!--                  </div>-->
                   <?php } ?>
                   <button type="submit" class="btn btn-block sent-butnn" name="submit">Update Profile</button>
                </div>

@@ -7,7 +7,7 @@ include('includes/dbconnection.php');
 <!DOCTYPE html>
 <html lang="zxx">
    <head>
-      <title>Kathmandu Canvas</title>
+      <title>Gallery Nest</title>
       
       <script>
          addEventListener("load", function () {
@@ -47,7 +47,7 @@ include('includes/dbconnection.php');
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>

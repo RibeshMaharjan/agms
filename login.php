@@ -37,7 +37,9 @@ if(isset($_POST['login']))
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
-   <head>
+<head>
+  <style>
+  </style>
       <title>Art Gallery Management System | Login Page</title>
       
       <script>
@@ -93,8 +95,31 @@ if(isset($_POST['login']))
       <!--//stylesheets-->
       <link href="//fonts.googleapis.com/css?family=Sunflower:500,700" rel="stylesheet">
       <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+      <style>
+         body {
+            margin: 0;
+            padding: 0;
+         }
+         .login-page {
+            /* background: url('images/l.jpg') no-repeat center center fixed; */
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+         }
+         .login-form {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+         }
+         .inner_page-banner.one-img {
+            display: none; /* Removed the banner section */
+         }
+      </style>
    </head>
-   <body>
+<body style="background-color: #f2f2f2;">
       <!--headder-->
       <?php include_once('includes/header.php');?>
       <!-- banner -->
@@ -104,7 +129,7 @@ if(isset($_POST['login']))
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>
@@ -126,7 +151,7 @@ if(isset($_POST['login']))
             <?php } ?>
             <div class="contact-list-grid">
                <form action="#" method="post" name="loginForm" onsubmit="return validateLoginForm()">
-                  <div class=" agile-wls-contact-mid">
+                  <div class="agile-wls-contact-mid">
                      <div class="form-group contact-forms">
                         <input type="text" class="form-control" placeholder="Username" name="username" required="true" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
                      </div>
@@ -154,4 +179,4 @@ if(isset($_POST['login']))
       <script src="js/bootstrap.min.js"></script>
       <!-- //bootstrap working-->
    </body>
-</html> 
+</html>

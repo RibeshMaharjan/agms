@@ -7,7 +7,7 @@ include('includes/dbconnection.php');
 <!DOCTYPE html>
 <html lang="zxx">
    <head>
-      <title>Kathmandu Canvas</title>
+      <title>Gallery Nest</title>
      
       <script>
          addEventListener("load", function () {
@@ -44,7 +44,7 @@ include('includes/dbconnection.php');
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>
@@ -57,11 +57,17 @@ include('includes/dbconnection.php');
       <!--contact -->
   
       <!--subscribe-address-->
+      <style>
+         .contact-info {
+            text-align: center;
+            margin-top: 80px; /* Increased the margin to move the content further down */
+         }
+      </style>
       <section class="subscribe">
          <div class="container-fluid">
          <div class="row">
             
-            <div class="col-lg-12 col-md-12 address-w3l-right text-center">
+            <div class="col-lg-12 col-md-12 address-w3l-right text-center contact-info">
                <?php
 
 $ret=mysqli_query($con,"select * from tblpage where PageType='contactus' ");

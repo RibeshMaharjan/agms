@@ -1,0 +1,26 @@
+# IDEs
+.idea/
+.vs/
+.vscode/
+
+# MiMoCode
+.mimocode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploaded images (user content)
+admin/images/*.jpg
+admin/images/*.jpeg
+admin/images/*.png
+admin/images/*.gif
+
+# Generated documentation
+ALGORITHMS_CHEATSHEET.md
+ALGORITHMS_MATHEMATICS.md
+ALGORITHMS_QUICK_REFERENCE.md
+ALGORITHMS_SUMMARY.md
+DOCUMENTATION_INDEX.md
+README_ALGORITHMS.md
+START_HERE.md

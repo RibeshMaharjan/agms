@@ -46,7 +46,7 @@ include('includes/dbconnection.php');
       <!-- short -->
       <div class="using-border py-3">
          <div class="inner_breadcrumb  ml-4">
-            <ul class="short_ls">
+            <ul class="short_ls d-flex">
                <li>
                   <a href="index.php">Home</a>
                   <span>/</span>
@@ -130,7 +130,8 @@ while ($row=mysqli_fetch_array($ret)) {
                      <div class="occasion-cart">
                         <div>
                            <h4>
-                                             <button class="btn btn-success"><a href="art-enquiry.php?eid=<?php echo $row['apid'];?>" >Enquiry</a></button></h4>
+                                             <button class="btn btn-success"><a href="art-enquiry.php?eid=<?php echo
+                                               $row['apid'];?>" >Purchase</a></button></h4>
                           
                         </div>
                      </div>
@@ -185,7 +186,7 @@ while ($row=mysqli_fetch_array($ret)) {
                         <h4 class="pt-3"><?php echo $row['Title'];?></h4>
                      </div>
                      <div class="outs_more-buttn">
-                        <a href="art-enquiry.php?eid=<?php echo $row['ID'];?>">Enquiry</a>
+                        <a href="art-enquiry.php?eid=<?php echo $row['ID'];?>">Purchase</a>
                         <a href="single-product.php?pid=<?php echo $row['ID'];?>">View</a>
                      </div>
                   </li>

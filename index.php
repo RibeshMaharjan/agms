@@ -6,15 +6,15 @@ include('includes/dbconnection.php');
 <!DOCTYPE html>
 <html lang="zxx">
    <head>
-      <title>Kathmandu Canvas</title>
+      <title>Artmandu</title>
       
       <script>
          addEventListener("load", function () {
-         	setTimeout(hideURLbar, 0);
+            setTimeout(hideURLbar, 0);
          }, false);
          
          function hideURLbar() {
-         	window.scrollTo(0, 1);
+            window.scrollTo(0, 1);
          }
       </script>
       <!--//meta tags ends here-->
@@ -46,7 +46,7 @@ include('includes/dbconnection.php');
                   <li>
                      <div class="slider-img one-img">
                         <div class="container">
-                           <div class="-info ">
+                           <div class="slider-info">
                               <h5>Pick The Best Art For <br>Your Choice</h5>
                               <div class="bottom-info">
                                  <p>Find the finest art pieces tailored to your preferences. We handpick and present a curated selection of exceptional artworks, ensuring that you discover the very best that resonates with your unique taste and style.</p>
@@ -61,10 +61,25 @@ include('includes/dbconnection.php');
                   <li>
                      <div class="slider-img two-img">
                         <div class="container">
-                           <div class="slider-info ">
+                           <div class="slider-info">
                               <h5>Sort Art And Painting<br>For Your Choice</h5>
                               <div class="bottom-info">
                                  <p>Custom-curated art for your preference.</p>
+                              </div>
+                              <div class="outs_more-buttn">
+                                 <a href="about.php">Read More</a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </li>
+                  <li>
+                     <div class="slider-img three-img">
+                        <div class="container">
+                           <div class="slider-info">
+                              <h5>Best Art And Painting<br> For Your Choice</h5>
+                              <div class="bottom-info">
+                                 <p>Discover the best art and paintings that are sure to captivate your senses. With a wide selection to choose from, explore a world of artistic excellence and find the perfect masterpiece that speaks to your unique taste and style.</p>
                               </div>
                               <div class="outs_more-buttn">
                                  <a href="about.php">Read More</a>
@@ -165,17 +180,12 @@ include('includes/dbconnection.php');
                      <h4 class="pt-3">Visuals Arts</h4>
                   </div>
                </div>
-               <div class="toys-grids-upper">
-                  <div class="about-toys-off">
-                     <h2>Get Up to <span>70% Off </span>On Selected Art</h2>
-                  </div>
-               </div>
             </div>
          </div>
       </section>
       <!-- //about -->
       <!--new Arrivals -->
-      <section class="blog py-lg-4 py-md-3 py-sm-3 py-3">
+      <section class="blog py-lg-4 py-md-3 py-sm-3 py-3" style="background-color: #14a2b9;">
          <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
             <h3 class="title clr text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">New Arrivals</h3>
             <div class="slid-img">
@@ -227,7 +237,6 @@ while ($row=mysqli_fetch_array($ret)) {
          </div>
       </section>
       <!--//Product-about-->
-     
       <!-- footer -->
       <?php include_once('includes/footer.php');?>
       <!-- //footer -->
@@ -242,13 +251,13 @@ while ($row=mysqli_fetch_array($ret)) {
          toys.render();
          
          toys.cart.on('toys_checkout', function (evt) {
-         	var items, len, i;
+            var items, len, i;
          
-         	if (this.subtotal() > 0) {
-         		items = this.items();
+            if (this.subtotal() > 0) {
+               items = this.items();
          
-         		for (i = 0, len = items.length; i < len; i++) {}
-         	}
+               for (i = 0, len = items.length; i < len; i++) {}
+            }
          });
       </script>
       <!-- //cart-js -->
@@ -257,20 +266,20 @@ while ($row=mysqli_fetch_array($ret)) {
       <script>
          // You can also use "$(window).load(function() {"
          $(function () {
-         	// Slideshow 4
-         	$("#slider4").responsiveSlides({
-         		auto: true,
-         		pager:false,
-         		nav:true ,
-         		speed: 900,
-         		namespace: "callbacks",
-         		before: function () {
-         			$('.events').append("<li>before event fired.</li>");
-         		},
-         		after: function () {
-         			$('.events').append("<li>after event fired.</li>");
-         		}
-         	});
+            // Slideshow 4
+            $("#slider4").responsiveSlides({
+               auto: true,
+               pager:false,
+               nav:true ,
+               speed: 900,
+               namespace: "callbacks",
+               before: function () {
+                  $('.events').append("<li>before event fired.</li>");
+               },
+               after: function () {
+                  $('.events').append("<li>after event fired.</li>");
+               }
+            });
          
          });
       </script>
@@ -279,29 +288,29 @@ while ($row=mysqli_fetch_array($ret)) {
       <script src="js/jquery.flexisel.js"></script>
       <script>
          $(window).load(function() {
-         	$("#flexiselDemo1").flexisel({
-         		visibleItems: 3,
-         		animationSpeed: 3000,
-         		autoPlay:true,
-         		autoPlaySpeed: 2000,    		
-         		pauseOnHover: true,
-         		enableResponsiveBreakpoints: true,
-         		responsiveBreakpoints: { 
-         			portrait: { 
-         				changePoint:480,
-         				visibleItems: 1
-         			}, 
-         			landscape: { 
-         				changePoint:640,
-         				visibleItems:2
-         			},
-         			tablet: { 
-         				changePoint:768,
-         				visibleItems: 2
-         			}
-         		}
-         	});
-         	
+            $("#flexiselDemo1").flexisel({
+               visibleItems: 3,
+               animationSpeed: 3000,
+               autoPlay:true,
+               autoPlaySpeed: 2000,    		
+               pauseOnHover: true,
+               enableResponsiveBreakpoints: true,
+               responsiveBreakpoints: { 
+                  portrait: { 
+                     changePoint:480,
+                     visibleItems: 1
+                  }, 
+                  landscape: { 
+                     changePoint:640,
+                     visibleItems:2
+                  },
+                  tablet: { 
+                     changePoint:768,
+                     visibleItems: 2
+                  }
+               }
+            });
+            
          });
       </script>
       <!-- //slider flexisel -->
@@ -310,12 +319,12 @@ while ($row=mysqli_fetch_array($ret)) {
       <script src="js/easing.js"></script>
       <script>
          jQuery(document).ready(function ($) {
-         	$(".scroll").click(function (event) {
-         		event.preventDefault();
-         		$('html,body').animate({
-         			scrollTop: $(this.hash).offset().top
-         		}, 900);
-         	});
+            $(".scroll").click(function (event) {
+               event.preventDefault();
+               $('html,body').animate({
+                  scrollTop: $(this.hash).offset().top
+               }, 900);
+            });
          });
       </script>
       <!-- start-smoth-scrolling -->
@@ -323,15 +332,15 @@ while ($row=mysqli_fetch_array($ret)) {
       <script>
          $(document).ready(function () {
          
-         	var defaults = {
-         		containerID: 'toTop', // fading element id
-         		containerHoverID: 'toTopHover', // fading element hover id
-         		scrollSpeed: 1200,
-         		easingType: 'linear'
-         	};
-         	$().UItoTop({
-         		easingType: 'easeOutQuart'
-         	});
+            var defaults = {
+               containerID: 'toTop', // fading element id
+               containerHoverID: 'toTopHover', // fading element hover id
+               scrollSpeed: 1200,
+               easingType: 'linear'
+            };
+            $().UItoTop({
+               easingType: 'easeOutQuart'
+            });
          
          });
       </script>
