@@ -120,6 +120,7 @@ def main():
     print(f"\nTotal parameters: {sum(p.numel() for p in model.parameters()):,}")
 
     best_acc = 0
+    total_time = 0
     for epoch in range(NUM_EPOCHS):
         start = time.time()
 
@@ -128,8 +129,15 @@ def main():
         scheduler.step(val_loss)
 
         elapsed = time.time() - start
+        total_time += elapsed
+        avg_epoch_time = total_time / (epoch + 1)
+        remaining = avg_epoch_time * (NUM_EPOCHS - epoch - 1)
 
-        print(f"Epoch {epoch+1}/{NUM_EPOCHS} ({elapsed:.1f}s) - "
+        def fmt_time(s):
+            h, m = int(s // 3600), int((s % 3600) // 60)
+            return f"{h}h {m}m" if h > 0 else f"{m}m"
+
+        print(f"Epoch {epoch+1}/{NUM_EPOCHS} ({elapsed:.1f}s) - ETA: {fmt_time(remaining)} - "
               f"train_loss={train_loss:.4f} train_acc={train_acc:.4f} - "
               f"val_loss={val_loss:.4f} val_acc={val_acc:.4f} val_prec={val_prec:.4f} val_rec={val_rec:.4f} val_f1={val_f1:.4f}")
 
