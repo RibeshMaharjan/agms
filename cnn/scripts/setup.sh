@@ -17,10 +17,10 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "[3/4] Pre-downloading AI detection model..."
-python -c "from transformers import pipeline; pipeline('image-classification', model='dima806/ai_vs_human_generated_image_detection')"
+python -c "from transformers import AutoImageProcessor, SiglipForImageClassification; AutoImageProcessor.from_pretrained('Krishn25/AI-vs-Human-image-detection'); SiglipForImageClassification.from_pretrained('Krishn25/AI-vs-Human-image-detection'); print('Model downloaded OK')"
 
 echo "[4/4] Verifying installation..."
-python -c "import fastapi, uvicorn, transformers, torch; print('All dependencies OK')"
+python -c "import fastapi, uvicorn, transformers, torch, accelerate; print('All dependencies OK')"
 
 echo ""
 echo "=== Setup complete ==="

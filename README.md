@@ -95,7 +95,7 @@ gallerynest/
 │   └── ...
 ├── cnn/                       # Python AI detection service
 │   ├── app.py                 # FastAPI server
-│   ├── detector.py            # ViT-Base model inference
+│   ├── detector.py            # SigLIP2 model inference
 │   ├── config.py              # Configuration
 │   ├── requirements.txt       # Python dependencies
 │   ├── scripts/               # Setup & start scripts
@@ -112,7 +112,7 @@ When an admin uploads an artwork, the image is automatically checked by a CNN mo
 
 1. Image uploaded via admin panel
 2. PHP sends image to FastAPI service (`localhost:8000/detect`)
-3. ViT-Base model classifies as "AI-generated" or "human"
+3. SigLIP2 model classifies as "AI-generated" or "human"
 4. Result stored in `tblartproduct.IsAIGenerated` column
 5. Admin sees warning if image is flagged
 
@@ -130,7 +130,7 @@ Environment variables for the CNN service:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CNN_SERVICE_PORT` | `8000` | Service port |
-| `CNN_MODEL_NAME` | `dima806/ai_vs_human_generated_image_detection` | HuggingFace model |
+| `CNN_MODEL_NAME` | `Krishn25/AI-vs-Human-image-detection` | HuggingFace model |
 | `CNN_CONFIDENCE_THRESHOLD` | `0.7` | AI flagging threshold |
 
 ## Tech Stack

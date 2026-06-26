@@ -1,19 +1,22 @@
 import time
-from transformers import pipeline
+import torch
+from transformers import AutoImageProcessor, SiglipForImageClassification
 from config import MODEL_NAME
 from utils.image_utils import preprocess_image
 
 
 class AIDetector:
     def __init__(self):
-        self.pipe = None
+        self.processor = None
+        self.model = None
         self.is_loaded = False
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def load_model(self):
-        self.pipe = pipeline(
-            "image-classification",
-            model=MODEL_NAME
-        )
+        self.processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
+        self.model = SiglipForImageClassification.from_pretrained(MODEL_NAME)
+        self.model.to(self.device)
+        self.model.eval()
         self.is_loaded = True
 
     def analyze(self, image_bytes: bytes, filename: str = "unknown") -> dict:
@@ -23,22 +26,20 @@ class AIDetector:
         start = time.time()
 
         img = preprocess_image(image_bytes)
-        results = self.pipe(img)
+        inputs = self.processor(images=img, return_tensors="pt").to(self.device)
+
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            logits = outputs.logits
+            probs = torch.softmax(logits, dim=-1)
 
         elapsed_ms = round((time.time() - start) * 1000, 1)
 
-        ai_score = 0.0
-        human_score = 0.0
-        for r in results:
-            label_lower = r["label"].lower()
-            if "ai" in label_lower or "generated" in label_lower:
-                ai_score = r["score"]
-            elif "human" in label_lower or "real" in label_lower:
-                human_score = r["score"]
+        label_map = self.model.config.id2label
+        scores = {label_map[i]: round(probs[0, i].item(), 4) for i in range(len(label_map))}
 
-        if ai_score == 0.0 and human_score == 0.0 and len(results) >= 2:
-            ai_score = results[0]["score"]
-            human_score = results[1]["score"]
+        ai_score = scores.get("ai", 0.0)
+        human_score = scores.get("hum", 0.0)
 
         is_ai = ai_score > human_score
         confidence = max(ai_score, human_score)
@@ -50,7 +51,7 @@ class AIDetector:
                 "confidence": round(confidence, 4),
                 "is_ai_generated": is_ai
             },
-            "all_scores": {r["label"]: round(r["score"], 4) for r in results},
+            "all_scores": scores,
             "model": MODEL_NAME,
             "processing_time_ms": elapsed_ms
         }
