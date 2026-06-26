@@ -95,7 +95,7 @@ gallerynest/
 │   └── ...
 ├── cnn/                       # Python AI detection service
 │   ├── app.py                 # FastAPI server
-│   ├── detector.py            # EfficientNet-B4 ensemble detection
+│   ├── detector.py            # ItsNotAI v2 dual-head detection
 │   ├── config.py              # Configuration
 │   ├── requirements.txt       # Python dependencies
 │   ├── scripts/               # Setup & start scripts
@@ -112,7 +112,7 @@ When an admin uploads an artwork, the image is automatically checked by a CNN mo
 
 1. Image uploaded via admin panel
 2. PHP sends image to FastAPI service (`localhost:8000/detect`)
-3. Ensemble (EfficientNet-B4 + SigLIP2 + EXIF) classifies as "AI-generated" or "human"
+3. ItsNotAI v2 (BEiT-Large) classifies as "AI-generated" or "human"
 4. Result stored in `tblartproduct.IsAIGenerated` column
 5. Admin sees warning if image is flagged
 
@@ -130,7 +130,7 @@ Environment variables for the CNN service:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CNN_SERVICE_PORT` | `8000` | Service port |
-| `CNN_MODEL_NAME` | `Dafilab/ai-image-detector` | HuggingFace model |
+| `CNN_MODEL_NAME` | `boluobobo/ItsNotAI-ai-detector-v2` | HuggingFace model |
 | `CNN_CONFIDENCE_THRESHOLD` | `0.7` | AI flagging threshold |
 
 ## Tech Stack

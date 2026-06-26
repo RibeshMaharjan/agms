@@ -2,7 +2,7 @@
 
 define('CNN_SERVICE_URL', 'http://100.105.55.0:8000');
 define('CNN_TIMEOUT', 10);
-define('CNN_CONFIDENCE_THRESHOLD', 0.7);
+define('CNN_CONFIDENCE_THRESHOLD', 0.85);
 
 function detectAIGeneratedImage($imagePath)
 {
@@ -59,6 +59,7 @@ function detectAIGeneratedImage($imagePath)
         'is_ai_generated' => $result['prediction']['is_ai_generated'] ?? false,
         'confidence' => $result['prediction']['confidence'] ?? 0.0,
         'label' => $result['prediction']['label'] ?? 'unknown',
+        'signals' => $result['signals'] ?? [],
         'processing_time_ms' => $result['processing_time_ms'] ?? 0,
     ];
 }
