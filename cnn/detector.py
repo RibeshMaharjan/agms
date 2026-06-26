@@ -1,5 +1,6 @@
 import time
 import io
+import warnings
 import torch
 from PIL import Image
 from torchvision import transforms
@@ -7,6 +8,9 @@ from timm import create_model
 from huggingface_hub import hf_hub_download
 from transformers import AutoImageProcessor, SiglipForImageClassification
 from config import MODEL_NAME, SECONDARY_MODEL, CONFIDENCE_THRESHOLD
+
+warnings.filterwarnings("ignore", message=".*bos_token_id.*")
+warnings.filterwarnings("ignore", message=".*eos_token_id.*")
 
 
 IMG_SIZE = 380

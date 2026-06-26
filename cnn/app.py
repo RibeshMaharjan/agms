@@ -46,7 +46,7 @@ async def detect(image: UploadFile = File(...)):
         success=True,
         filename=image.filename,
         prediction=result["prediction"],
-        all_scores=result["all_scores"],
+        signals=result["signals"],
         model=result["model"],
         processing_time_ms=elapsed_ms
     )
