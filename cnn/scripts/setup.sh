@@ -8,20 +8,23 @@ echo "=== GalleryNest CNN Setup ==="
 
 cd "$CNN_DIR"
 
-echo "[1/4] Creating virtual environment..."
+echo "[1/3] Creating virtual environment..."
 python3 -m venv venv
 source venv/bin/activate
 
-echo "[2/4] Installing Python dependencies..."
+echo "[2/3] Installing Python dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "[3/4] Pre-downloading AI detection model..."
-python -c "from transformers import AutoModelForImageClassification, AutoImageProcessor; AutoModelForImageClassification.from_pretrained('boluobobo/ItsNotAI-ai-detector-v2'); AutoImageProcessor.from_pretrained('boluobobo/ItsNotAI-ai-detector-v2'); from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='boluobobo/ItsNotAI-ai-detector-v2', filename='binary_head.pt'); hf_hub_download(repo_id='boluobobo/ItsNotAI-ai-detector-v2', filename='source_meta.json'); print('Model downloaded OK')"
-
-echo "[4/4] Verifying installation..."
-python -c "import fastapi, uvicorn, transformers, torch; print('All dependencies OK')"
+echo "[3/3] Verifying installation..."
+python -c "import fastapi, uvicorn, torch, torchvision; print('All dependencies OK')"
 
 echo ""
 echo "=== Setup complete ==="
-echo "Start the service with: scripts/start.sh"
+echo ""
+echo "To download dataset and train the model:"
+echo "  python train/prepare_dataset.py    # Downloads AI-ArtBench from Kaggle"
+echo "  python train/train.py data         # Trains the CNN"
+echo ""
+echo "To start the service:"
+echo "  scripts/start.sh"

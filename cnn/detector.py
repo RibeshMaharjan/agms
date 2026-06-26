@@ -1,35 +1,38 @@
 import time
 import io
+import os
 import torch
-import torch.nn as nn
 from PIL import Image
-from transformers import AutoModelForImageClassification, AutoImageProcessor
-from huggingface_hub import hf_hub_download
-from config import MODEL_NAME, CONFIDENCE_THRESHOLD
+from torchvision import transforms
+from model.cnn_architecture import AIDetectionCNN
+from config import MODEL_SAVE_PATH, IMG_SIZE, NUM_CLASSES, CONFIDENCE_THRESHOLD
+
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+inference_transform = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
 
 
 class AIDetector:
     def __init__(self):
         self.model = None
-        self.processor = None
-        self.binary_head = None
         self.is_loaded = False
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def load_model(self):
-        self.model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
-        self.processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
+        self.model = AIDetectionCNN(num_classes=NUM_CLASSES)
 
-        hidden_size = self.model.config.hidden_size
-        binary_head_path = hf_hub_download(repo_id=MODEL_NAME, filename="binary_head.pt")
-        self.binary_head = nn.Sequential(nn.Dropout(0.1), nn.Linear(hidden_size, 2))
-        missing, unexpected = self.binary_head.load_state_dict(
-            torch.load(binary_head_path, map_location=self.device), strict=True
-        )
-        assert not missing and not unexpected, f"Binary head load mismatch: missing={missing}, unexpected={unexpected}"
+        if os.path.exists(MODEL_SAVE_PATH):
+            print(f"Loading trained CNN from: {MODEL_SAVE_PATH}")
+            self.model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=DEVICE))
+        else:
+            print(f"WARNING: No trained model found at {MODEL_SAVE_PATH}")
+            print("Run 'python train/train.py' to train the model first.")
+            print("Using randomly initialized weights (predictions will be meaningless).")
 
-        self.model.to(self.device).eval()
-        self.binary_head.to(self.device).eval()
+        self.model.to(DEVICE).eval()
         self.is_loaded = True
 
     def analyze(self, image_bytes: bytes, filename: str = "unknown") -> dict:
@@ -39,17 +42,16 @@ class AIDetector:
         start = time.time()
 
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        inputs = self.processor(img, return_tensors="pt").to(self.device)
+        tensor = inference_transform(img).unsqueeze(0).to(DEVICE)
 
         with torch.no_grad():
-            features = self.model.beit(inputs["pixel_values"]).last_hidden_state[:, 0]
-            binary_logits = self.binary_head(features)
-            binary_probs = torch.softmax(binary_logits, dim=-1)[0]
-
-            human_prob = binary_probs[0].item()
-            ai_prob = binary_probs[1].item()
+            outputs = self.model(tensor)
+            probs = torch.softmax(outputs, dim=-1)[0]
 
         elapsed_ms = round((time.time() - start) * 1000, 1)
+
+        human_prob = probs[0].item()
+        ai_prob = probs[1].item()
 
         is_ai = ai_prob > human_prob and ai_prob >= CONFIDENCE_THRESHOLD
         confidence = max(ai_prob, human_prob)
@@ -65,6 +67,6 @@ class AIDetector:
                 "ai_probability": round(ai_prob, 4),
                 "human_probability": round(human_prob, 4)
             },
-            "model": MODEL_NAME,
+            "model": "Custom CNN (from scratch)",
             "processing_time_ms": elapsed_ms
         }

@@ -95,9 +95,14 @@ gallerynest/
 │   └── ...
 ├── cnn/                       # Python AI detection service
 │   ├── app.py                 # FastAPI server
-│   ├── detector.py            # ItsNotAI v2 dual-head detection
+│   ├── detector.py            # Custom CNN inference
 │   ├── config.py              # Configuration
 │   ├── requirements.txt       # Python dependencies
+│   ├── model/
+│   │   ├── cnn_architecture.py  # CNN architecture (from scratch)
+│   │   └── weights/           # Trained model weights
+│   ├── train/
+│   │   └── train.py           # Training script
 │   ├── scripts/               # Setup & start scripts
 │   └── tests/                 # Unit & API tests
 ├── database/
@@ -108,11 +113,11 @@ gallerynest/
 
 ## CNN AI Image Detection
 
-When an admin uploads an artwork, the image is automatically checked by a CNN model:
+When an admin uploads an artwork, the image is automatically checked by a custom CNN model:
 
 1. Image uploaded via admin panel
 2. PHP sends image to FastAPI service (`localhost:8000/detect`)
-3. ItsNotAI v2 (BEiT-Large) classifies as "AI-generated" or "human"
+3. Custom CNN classifies as "AI-generated" or "human"
 4. Result stored in `tblartproduct.IsAIGenerated` column
 5. Admin sees warning if image is flagged
 
@@ -130,7 +135,7 @@ Environment variables for the CNN service:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CNN_SERVICE_PORT` | `8000` | Service port |
-| `CNN_MODEL_NAME` | `boluobobo/ItsNotAI-ai-detector-v2` | HuggingFace model |
+| `CNN_MODEL_SAVE_PATH` | `model/weights/cnn_best.pth` | Trained model path |
 | `CNN_CONFIDENCE_THRESHOLD` | `0.7` | AI flagging threshold |
 
 ## Tech Stack
