@@ -6,19 +6,19 @@ include('includes/dbconnection.php');
 // Check if user is logged in before allowing purchase
 if (isset($_POST['send'])) {
    // Check if user is logged in
-   if (strlen($_SESSION['agmsuid']) == 0) {
+   if (strlen($_SESSION['agmsuid'] ?? '') == 0) {
       echo "<script>alert('Please login to make a purchase.');</script>";
       echo "<script>window.location.href='login.php';</script>";
       exit();
    }
    echo "Running";
-   
+
    $fullname = $_POST['fullname'];
    $email = $_POST['email'];
    $mobilenumber = $_POST['mobnum'];
    $address = $_POST['address'];
    $eid = $_POST['eid'];
-   
+
    echo "Got data";
    // Server-side validation
    $error = '';
@@ -52,13 +52,13 @@ if (isset($_POST['send'])) {
       echo "Order query prepared";
       // $stmt->bind_param($ordernumber, $eid, $fullname, $email, $mobilenumber, $address);
       echo "Order query prepared";
-      
+
       if ($query) {
          // Fetch the product amount
          $product_query = mysqli_query($con, "SELECT SellingPricing FROM tblartproduct WHERE ID='$eid'");
          $product_row = mysqli_fetch_assoc($product_query);
          $product_amount = $product_row['SellingPricing'];
-         
+
          // Redirect to eSewa page with order_id and product_amount
          header("Location: ./e-sewa.php?order_id=$ordernumber&product_amount=$product_amount");
          exit();
@@ -83,7 +83,7 @@ if (isset($_POST['send'])) {
       function hideURLbar() {
          window.scrollTo(0, 1);
       }
-      
+
       // Form validation function
       function validatePurchaseForm() {
          var fullname = document.forms["purchaseForm"]["fullname"].value;
@@ -92,16 +92,16 @@ if (isset($_POST['send'])) {
          var address = document.forms["purchaseForm"]["address"].value;
          var errorDiv = document.getElementById("clientError");
          var isValid = true;
-         
+
          // Clear previous errors
          errorDiv.innerHTML = '';
          errorDiv.style.display = 'none';
-         
+
          if (fullname.trim() == "") {
             showError("Full name is required");
             isValid = false;
          }
-         
+
          if (email.trim() == "") {
             showError("Email is required");
             isValid = false;
@@ -109,7 +109,7 @@ if (isset($_POST['send'])) {
             showError("Please enter a valid email address");
             isValid = false;
          }
-         
+
          if (mobilenumber.trim() == "") {
             showError("Mobile number is required");
             isValid = false;
@@ -117,17 +117,17 @@ if (isset($_POST['send'])) {
             showError("Please enter a valid 10-digit mobile number");
             isValid = false;
          }
-         
+
          if (address.trim() == "") {
             showError("Address is required");
             isValid = false;
          }
-         
+
          function showError(message) {
             errorDiv.style.display = 'block';
             errorDiv.innerHTML += '<div class="alert alert-danger">' + message + '</div>';
          }
-         
+
          return isValid;
       }
    </script>
@@ -208,8 +208,8 @@ if (isset($_POST['send'])) {
             }
          ?>
          <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Purchase</h3>
-         
-         <?php if(strlen($_SESSION['agmsuid']) > 0) { ?>
+
+         <?php if(strlen($_SESSION['agmsuid'] ?? '') > 0) { ?>
          <!-- Show purchase form only if user is logged in -->
          <div class="contact-list-grid container">
             <div id="clientError" style="display: none;"></div>
@@ -223,7 +223,7 @@ if (isset($_POST['send'])) {
             <?php } ?>
             <?php if(isset($_SESSION['success'])) { ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-               <?php 
+               <?php
                   echo $_SESSION['success'];
                   unset($_SESSION['success']); // Clear the success message after displaying
                ?>

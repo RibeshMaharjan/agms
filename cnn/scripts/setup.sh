@@ -17,14 +17,24 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "[3/3] Verifying installation..."
-python -c "import fastapi, uvicorn, torch, torchvision; print('All dependencies OK')"
+python -c "
+import fastapi, uvicorn, torch, torchvision, transformers, huggingface_hub
+print('All dependencies OK')
+"
 
 echo ""
 echo "=== Setup complete ==="
 echo ""
-echo "To download dataset and train the model:"
+echo "To pre-download the HuggingFace model (optional, ~1.2GB):"
+echo "  python -c \"from transformers import AutoModelForImageClassification, AutoImageProcessor; AutoModelForImageClassification.from_pretrained('boluobobo/ItsNotAI-ai-detector-v2'); AutoImageProcessor.from_pretrained('boluobobo/ItsNotAI-ai-detector-v2')\""
+echo ""
+echo "To train the custom CNN model:"
 echo "  python train/prepare_dataset.py    # Downloads AI-ArtBench from Kaggle"
-echo "  python train/train.py data         # Trains the CNN"
+echo "  python train/train.py data         # Trains the CNN (50 epochs)"
 echo ""
 echo "To start the service:"
 echo "  scripts/start.sh"
+echo ""
+echo "Model selection (set env var before starting):"
+echo "  CNN_MODEL_TYPE=huggingface  # boluobobo/ItsNotAI-ai-detector-v2 (default)"
+echo "  CNN_MODEL_TYPE=custom       # Custom CNN from scratch"

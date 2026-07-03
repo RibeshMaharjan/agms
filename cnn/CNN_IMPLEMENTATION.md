@@ -332,10 +332,55 @@ cnn/
 └── requirements.txt           # Dependencies
 ```
 
-## 8. References
+## 8. Switchable Backend: HuggingFace Model
+
+The service supports a second backend via the `CNN_MODEL_TYPE` config variable.
+
+### Backend: HuggingFace (`CNN_MODEL_TYPE=huggingface`)
+
+- **Model**: `boluobobo/ItsNotAI-ai-detector-v2`
+- **Architecture**: BEiT-Large (Vision Transformer, 304M params)
+- **Source**: Fine-tuned from microsoft/beit-large-patch16-224
+- **Dual-Head Design**:
+  - Binary head: dedicated Real vs AI classification (95%+ accuracy)
+  - Multi-class head: identifies the specific AI generator (33 classes: Midjourney, SD, DALL-E, FLUX, GANs, etc.)
+- **Input**: 224×224 RGB
+- **Weights**: Auto-downloaded from HuggingFace (~1.2 GB cached on first use)
+
+### Switching Between Backends
+
+```bash
+# Custom CNN (default)
+python app.py
+
+# HuggingFace model
+CNN_MODEL_TYPE=huggingface python app.py
+```
+
+The `AIDetector` class in `detector.py` routes to the correct implementation:
+- `CustomDetector`: The from-scratch CNN described in sections 2–7
+- `HuggingFaceDetector`: Wraps the HuggingFace pipeline with the same `analyze()` interface
+
+Both return identical JSON structure so the PHP layer (`cnn_helper.php`) is unaffected.
+
+### Comparison
+
+| Aspect | Custom CNN | HuggingFace (BEiT-Large) |
+|--------|-----------|-------------------------|
+| Parameters | ~1.7M | ~304M |
+| Training data | AI-ArtBench (180K) | ArtiFact + FLUX + MJ (50K+) |
+| Training epochs | 50 (from scratch) | 10 (fine-tuned) |
+| Accuracy (binary) | 85-92% | 95%+ |
+| AI source ID | No | Yes (33 sources) |
+| Disk size | ~7 MB | ~1.2 GB |
+| RAM usage | ~500 MB | ~2 GB |
+
+## 9. References
 
 1. LeCun, Y., et al. (1998). Gradient-based learning applied to document recognition. Proceedings of the IEEE.
 2. Krizhevsky, A., et al. (2012). ImageNet classification with deep convolutional neural networks. NeurIPS.
 3. Ioffe, S., & Szegedy, C. (2015). Batch normalization: Accelerating deep network training. ICML.
 4. Srivastava, N., et al. (2014). Dropout: A simple way to prevent neural networks from overfitting. JMLR.
 5. Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. ICLR.
+6. ItsNotAI Team (2025). ItsNotAI v2: Dual-Head AI Image Detection. https://huggingface.co/boluobobo/ItsNotAI-ai-detector-v2
+7. Bao, H., et al. (2021). BEiT: BERT Pre-Training of Image Transformers. ICLR.

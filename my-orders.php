@@ -4,12 +4,12 @@ error_reporting(0);
 include('includes/dbconnection.php');
 
 // Check if user is logged in
-if (strlen($_SESSION['agmsuid']) == 0) {
+if (strlen($_SESSION['agmsuid'] ?? '') == 0) {
     header('location:login.php');
     exit();
 }
 
-$userid = $_SESSION['agmsuid'];
+$userid = $_SESSION['agmsuid'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
@@ -67,7 +67,7 @@ $userid = $_SESSION['agmsuid'];
     <section class="contact py-lg-4 py-md-3 py-sm-3 py-3">
         <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
             <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">My Orders</h3>
-            
+
             <div class="row">
                 <div class="col-12">
                     <div class="table-responsive">
@@ -85,12 +85,12 @@ $userid = $_SESSION['agmsuid'];
                             <tbody>
                                 <?php
                                 // Join query to get order details along with artwork information
-                                $query = mysqli_query($con, "SELECT o.*, a.Title, a.SellingPricing, a.Image 
-                                                           FROM tblorder o 
-                                                           LEFT JOIN tblartproduct a ON o.Artpdid = a.ID 
-                                                           WHERE o.Email = (SELECT Email FROM tblusers WHERE ID = $userid) 
+                                $query = mysqli_query($con, "SELECT o.*, a.Title, a.SellingPricing, a.Image
+                                                           FROM tblorder o
+                                                           LEFT JOIN tblartproduct a ON o.Artpdid = a.ID
+                                                           WHERE o.Email = (SELECT Email FROM tblusers WHERE ID = $userid)
                                                            ORDER BY o.OrderDate DESC");
-                                
+
                                 if (mysqli_num_rows($query) > 0) {
                                     while ($row = mysqli_fetch_array($query)) {
                                 ?>
@@ -107,7 +107,7 @@ $userid = $_SESSION['agmsuid'];
                                         <td>Rs. <?php echo number_format($row['SellingPricing'], 2); ?></td>
                                         <td><?php echo date('d-m-Y', strtotime($row['OrderDate'])); ?></td>
                                         <td>
-                                            <?php 
+                                            <?php
                                             $status = $row['Status'];
                                             $statusClass = '';
                                             switch($status) {

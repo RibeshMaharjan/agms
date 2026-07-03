@@ -40,14 +40,14 @@
                      <li class="nav-item">
                         <a href="about.php" class="nav-link">About</a>
                      </li>
-                    
-                    
+
+
                      <!-- dropdown menu -->
                      <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Art Type
                         </a>
-                       
+
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                            <?php
                                     $ret=mysqli_query($con,"select * from tblarttype");
@@ -62,7 +62,7 @@ while ($row=mysqli_fetch_array($ret)) {
                      <li class="nav-item">
                         <a href="contact.php" class="nav-link">Contact</a>
                      </li>
-                     <?php if(strlen($_SESSION['agmsuid'])==0) { ?>
+                     <?php if(strlen($_SESSION['agmsuid'] ?? '')==0) { ?>
                      <li class="nav-item">
                         <a href="login.php" class="nav-link">Login</a>
                      </li>
@@ -82,7 +82,7 @@ while ($row=mysqli_fetch_array($ret)) {
                         </div>
                      </li>
                      <?php } ?>
-                     <?php if(strlen($_SESSION['agmsuid'])==0) { ?>
+                     <?php if(strlen($_SESSION['agmsuid'] ?? '')==0) { ?>
                       <li class="nav-item">
                         <a href="admin/login.php" class="nav-link">Admin</a>
                      </li>
@@ -92,8 +92,8 @@ while ($row=mysqli_fetch_array($ret)) {
             </nav>
          </div>
          <!-- Slideshow 4 -->
-        
-      
+
+
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog" role="document">
             <div class="modal-content">

@@ -2,13 +2,13 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['agmsuid']==0)) {
+if (strlen($_SESSION['agmsuid'] ?? '') == 0) {
   header('location:logout.php');
 }
 else{
   if(isset($_POST['submit']))
   {
-    $userid=$_SESSION['agmsuid'];
+    $userid=$_SESSION['agmsuid'] ?? '';
     $cpassword=trim($_POST['currentpassword']);
     $newpassword=trim($_POST['newpassword']);
     $confirmpassword=trim($_POST['confirmpassword']);
@@ -37,11 +37,11 @@ else{
 <head>
    <title>Art Gallery Management System | Change Password</title>
    <script type="application/x-javascript">
-      addEventListener("load", function() { 
-          setTimeout(hideURLbar, 0); 
+      addEventListener("load", function() {
+          setTimeout(hideURLbar, 0);
       }, false);
-      function hideURLbar(){ 
-          window.scrollTo(0,1); 
+      function hideURLbar(){
+          window.scrollTo(0,1);
       }
    </script>
    <!-- Custom Theme files -->
@@ -67,7 +67,7 @@ else{
               return false;
           }
           return true;
-      } 
+      }
    </script>
 </head>
 <body>

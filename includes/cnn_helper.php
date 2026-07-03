@@ -1,6 +1,6 @@
 <?php
 
-define('CNN_SERVICE_URL', 'http://100.105.55.0:8000');
+define('CNN_SERVICE_URL', 'http://100.105.55.0:7070');
 define('CNN_TIMEOUT', 10);
 define('CNN_CONFIDENCE_THRESHOLD', 0.85);
 

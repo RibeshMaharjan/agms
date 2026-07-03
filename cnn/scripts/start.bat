@@ -13,5 +13,5 @@ if not exist "venv" (
 
 call venv\Scripts\activate.bat
 
-echo Starting GalleryNest CNN Detection Service on port 8000...
+echo Starting GalleryNest CNN Detection Service on port 7070...
 python app.py

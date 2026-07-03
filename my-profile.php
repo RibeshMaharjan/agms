@@ -2,18 +2,18 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['agmsuid']==0)) {
+if (strlen($_SESSION['agmsuid'] ?? '') == 0) {
   header('location:logout.php');
 }
 else{
   if(isset($_POST['submit']))
   {
-    $uid=$_SESSION['agmsuid'];
+    $uid=$_SESSION['agmsuid'] ?? '';
     $fullname=$_POST['fullname'];
     $mobno=$_POST['mobilenumber'];
     $email=$_POST['email'];
     $address=$_POST['address'];
-    
+
     $query=mysqli_query($con, "update tblusers set FullName='$fullname', MobileNumber='$mobno', Email='$email', Address='$address' where ID='$uid'");
     if ($query) {
       echo '<script>alert("Profile has been updated")</script>';
@@ -33,7 +33,7 @@ else{
       addEventListener("load", function () {
          setTimeout(hideURLbar, 0);
       }, false);
-      
+
       function hideURLbar() {
          window.scrollTo(0, 1);
       }
@@ -81,7 +81,7 @@ else{
          <div class="contact-list-grid">
             <form method="post">
                <?php
-               $uid=$_SESSION['agmsuid'];
+               $uid=$_SESSION['agmsuid'] ?? '';
                $ret=mysqli_query($con,"select * from tblusers where ID='$uid'");
                $cnt=1;
                while ($row=mysqli_fetch_array($ret)) {

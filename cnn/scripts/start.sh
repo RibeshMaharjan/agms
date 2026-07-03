@@ -13,5 +13,5 @@ fi
 
 source venv/bin/activate
 
-echo "Starting GalleryNest CNN Detection Service on port 8000..."
+echo "Starting GalleryNest CNN Detection Service on port 7070..."
 python app.py
