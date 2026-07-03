@@ -73,7 +73,7 @@ $pic=md5($pic).time().$extension;
 //$pic3=md5($pic3).time().$extension3;
 //$pic4=md5($pic4).time().$extension4;
      move_uploaded_file($_FILES["images"]["tmp_name"],"images/".$pic);
-     
+
      // CNN AI Image Detection
      $cnnResult = detectAIGeneratedImage("images/" . $pic);
      $isAIFlagged = 0;
@@ -82,7 +82,7 @@ $pic=md5($pic).time().$extension;
      } else {
          $isAIFlagged = $cnnResult['is_ai_generated'] ? 1 : 0;
      }
-     
+
      //move_uploaded_file($_FILES["image1"]["tmp_name"],"images/".$pic1);
      //move_uploaded_file($_FILES["image2"]["tmp_name"],"images/".$pic2);
      //move_uploaded_file($_FILES["image3"]["tmp_name"],"images/".$pic3);
@@ -109,7 +109,7 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
 <html lang="en">
 
 <head>
-  
+
   <title>Add Art Product | Art Gallery Management System</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/bootstrap-theme.css" rel="stylesheet">
@@ -174,7 +174,7 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
             </ol>
           </div>
         </div>
-        <div class="row">      
+        <div class="row">
           <form class="form-horizontal " method="post" action="" enctype="multipart/form-data">
           <div class="col-lg-6">
             <section class="panel">
@@ -182,7 +182,7 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                 Add Art Product Detail
               </header>
               <div class="panel-body">
-                  
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Title</label>
                     <div class="col-sm-10">
@@ -249,11 +249,11 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                         <option value="">Choose orientation</option>
                         <option value="Potrait">Potrait</option>
                         <option value="Landscape">Landscape</option>
-                        
+
                       </select>
                     </div>
                   </div>
-                   
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Size</label>
                     <div class="col-sm-10">
@@ -273,9 +273,9 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                                 <?php $query=mysqli_query($con,"select * from tblartist");
               while($row=mysqli_fetch_array($query))
               {
-              ?>    
+              ?>
               <option value="<?php echo $row['ID'];?>"><?php echo $row['Name'];?></option>
-                  <?php } ?> 
+                  <?php } ?>
                             </select>
                     </div>
                   </div>
@@ -287,9 +287,9 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                                 <?php $query=mysqli_query($con,"select * from tblarttype");
               while($row=mysqli_fetch_array($query))
               {
-              ?>    
+              ?>
               <option value="<?php echo $row['ID'];?>"><?php echo $row['ArtType'];?></option>
-                  <?php } ?> 
+                  <?php } ?>
                             </select>
                     </div>
                   </div>
@@ -301,28 +301,28 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                                 <?php $query=mysqli_query($con,"select * from tblartmedium");
               while($row=mysqli_fetch_array($query))
               {
-              ?>    
+              ?>
               <option value="<?php echo $row['ID'];?>"><?php echo $row['ArtMedium'];?></option>
-                  <?php } ?> 
+                  <?php } ?>
                             </select>
                     </div>
                   </div>
-                  
-                  
+
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Selling Price</label>
                     <div class="col-sm-10">
                       <input class="form-control " id="sprice" type="number" name="sprice" required="true">
                     </div>
                   </div>
-                
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Art Product Description</label>
                     <div class="col-sm-10">
                       <textarea class="form-control " id="description" type="text" name="description" rows="12" cols="4" required="true"></textarea>
                     </div>
                   </div>
-                  
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Product Tag</label>
                     <div class="col-sm-10" id="tag-container">
@@ -331,12 +331,12 @@ echo "<script>window.location.href ='add-art-product.php'</script>";
                   </div>
               </div>
             </section>
-            
+
           </div>
                <p style="text-align: center;"> <button type="submit" name='submit' class="btn btn-primary">Submit</button></p>
               </form>
         </div>
-      
+
       </section>
     </section>
  <?php include_once('includes/footer.php');?>
@@ -447,10 +447,10 @@ document.querySelectorAll('input[type="file"][id^="image"]').forEach(function(in
       .then(function(data) {
         if (data.error) { badge.textContent = 'Error'; badge.className = 'ai-badge error'; return; }
         if (data.is_ai_generated) {
-          badge.textContent = 'AI-Generated (' + (data.confidence * 100).toFixed(1) + '%)';
+          badge.textContent = 'AI-Generated';
           badge.className = 'ai-badge ai';
         } else {
-          badge.textContent = 'Human (' + (data.confidence * 100).toFixed(1) + '%)';
+          badge.textContent = 'Human';
           badge.className = 'ai-badge human';
         }
       })
