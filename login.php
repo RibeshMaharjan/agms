@@ -25,7 +25,15 @@ if(isset($_POST['login']))
         $_SESSION['agmsuid'] = $ret['ID'];
         $_SESSION['agmsuname'] = $ret['UserName'];
         $_SESSION['agmsfullname'] = $ret['FullName'];
-        echo "<script type='text/javascript'> document.location ='index.php'; </script>";
+        $role = $ret['Role'] ?? 'user';
+        $_SESSION['agmsrole'] = $role;
+        if($role === 'artist') {
+          echo "<script type='text/javascript'> document.location ='artist/dashboard.php'; </script>";
+        } elseif($role === 'admin') {
+          echo "<script type='text/javascript'> document.location ='admin/dashboard.php'; </script>";
+        } else {
+          echo "<script type='text/javascript'> document.location ='index.php'; </script>";
+        }
       } else {
         $error = "Invalid password. Please try again.";
       }
