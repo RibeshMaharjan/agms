@@ -80,19 +80,20 @@ $sql=mysqli_query($con,"delete from tblartist where ID='$rid'");
                     <th>Mobile Number</th>
                     <th>Registration Date</th>
                     <th>no of art</th>
-                   
+                    <th>Login Status</th>
                           <th>Action</th>
                 </tr>
                                         </tr>
                                         </thead>
                <?php
-$ret=mysqli_query($con,"select *  from  tblartist");
+$ret=mysqli_query($con,"select a.*, u.UserName, u.Role from tblartist a LEFT JOIN tblusers u ON a.ID = u.ArtistProfileID");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
   $id = $row['ID'];
   $artist = "SELECT * FROM tblartproduct WHERE Artist='$id' ";
   $artresult = mysqli_query($con, $artist);
   $artcount = mysqli_num_rows($artresult);
+  $has_login = !empty($row['UserName']);
 
 ?>
               
@@ -103,6 +104,13 @@ while ($row=mysqli_fetch_array($ret)) {
                   <td><?php  echo $row['MobileNumber'];?></td>
                   <td><?php  echo $row['CreationDate'];?></td>
                   <td><?php  echo $artcount;?></td>
+                  <td>
+                    <?php if($has_login): ?>
+                      <span class="label label-success" title="Username: <?php echo $row['UserName']; ?>">Login Active</span>
+                    <?php else: ?>
+                      <span class="label label-warning">No Login</span>
+                    <?php endif; ?>
+                  </td>
                   <td><a href="edit-artist-detail.php?editid=<?php echo $row['ID'];?>" class="btn btn-success">Edit</a> || <a href="manage-artist.php?delid=<?php echo $row['ID'];?>" class="btn btn-danger">Delete</a></td>
                 </tr>
                 <?php 

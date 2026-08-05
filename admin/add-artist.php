@@ -31,7 +31,12 @@ $proimg=md5($img).$extension;
      move_uploaded_file($_FILES["images"]["tmp_name"],"images/".$proimg);
     $query=mysqli_query($con, "insert into tblartist(Name,MobileNumber,Email,Education,Award,Profilepic) value('$name','$mobnum','$email','$edudetails','$awarddetails','$proimg')");
     if ($query) {
-echo "<script>alert('Artist details has been added.');</script>";
+      // Create user account for artist login
+      $artist_id = mysqli_insert_id($con);
+      $username = 'artist_' . $artist_id;
+      $temp_password = password_hash('artist123', PASSWORD_DEFAULT);
+      mysqli_query($con, "INSERT INTO tblusers(FullName, UserName, MobileNumber, Email, Password, Role, ArtistProfileID) VALUES('$name', '$username', '$mobnum', '$email', '$temp_password', 'artist', '$artist_id')");
+echo "<script>alert('Artist details has been added. Username: $username / Password: artist123');</script>";
 echo "<script>window.location.href ='manage-artist.php'</script>";
   }
   else
