@@ -1,0 +1,98 @@
+@startuml
+
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam rectangleBackgroundColor #FFFFFF
+skinparam rectangleBorderColor #2C3E50
+skinparam nodesep 35
+skinparam ranksep 45
+
+<style>
+usecaseDiagram {
+  actor {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    FontSize 13
+  }
+  usecase {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    FontSize 12
+    Padding 10
+    LineThickness 2
+  }
+}
+</style>
+
+actor Visitor
+actor Customer
+actor Administrator as Admin
+
+rectangle "Artmandu Art Gallery Management System" {
+  package "Public Access" as PublicAccess {
+    usecase "Browse Gallery" as BrowseGallery
+    usecase "Search Artworks" as SearchArtworks
+    usecase "View Artwork Details" as ViewArtworkDetails
+    usecase "Register" as Register
+    usecase "Login" as Login
+
+    BrowseGallery -down[hidden]-> SearchArtworks
+    SearchArtworks -down[hidden]-> ViewArtworkDetails
+    ViewArtworkDetails -down[hidden]-> Register
+    Register -down[hidden]-> Login
+  }
+
+  package "Customer Services" as CustomerServices {
+    usecase "Manage Profile" as CustomerProfile
+    usecase "Purchase Artwork" as PurchaseArtwork
+    usecase "Process Payment" as ProcessPayment
+    usecase "View My Orders" as ViewOrders
+
+    CustomerProfile -down[hidden]-> PurchaseArtwork
+    PurchaseArtwork -down[hidden]-> ProcessPayment
+    ProcessPayment -down[hidden]-> ViewOrders
+  }
+
+  package "Administration" as Administration {
+    usecase "View Admin Dashboard" as AdminDashboard
+    usecase "Manage Users" as ManageUsers
+    usecase "Manage Artists" as ManageArtists
+    usecase "Manage Catalogue" as ManageCatalogue
+    usecase "Manage All Artworks" as ManageAllArtworks
+    usecase "Review Orders" as ReviewOrders
+
+    AdminDashboard -down[hidden]-> ManageUsers
+    ManageUsers -down[hidden]-> ManageArtists
+    ManageArtists -down[hidden]-> ManageCatalogue
+    ManageCatalogue -down[hidden]-> ManageAllArtworks
+    ManageAllArtworks -down[hidden]-> ReviewOrders
+  }
+
+  PublicAccess -down[hidden]-> CustomerServices
+  CustomerServices -down[hidden]-> Administration
+}
+
+Visitor -right[thickness=2]- BrowseGallery
+Visitor -right[thickness=2]- SearchArtworks
+Visitor -right[thickness=2]- ViewArtworkDetails
+Visitor -right[thickness=2]- Register
+Visitor -right[thickness=2]- Login
+
+Customer -right[thickness=2]- CustomerProfile
+Customer -right[thickness=2]- PurchaseArtwork
+Customer -right[thickness=2]- ProcessPayment
+Customer -right[thickness=2]- ViewOrders
+
+Admin -left[thickness=2]- AdminDashboard
+Admin -left[thickness=2]- ManageUsers
+Admin -left[thickness=2]- ManageArtists
+Admin -left[thickness=2]- ManageCatalogue
+Admin -left[thickness=2]- ManageAllArtworks
+Admin -left[thickness=2]- ReviewOrders
+
+@enduml

@@ -82,6 +82,18 @@ CNN_MODEL_TYPE=custom python app.py
 
 The service starts on `http://127.0.0.1:7070`.
 
+### Quantitative evaluation
+
+After training, keep the held-out images in `data/val/real` and `data/val/ai` and run:
+
+```bash
+python3 train/evaluate.py data --weights model/weights/cnn_best.pth \
+  --output evaluation_results.json
+```
+
+The evaluator writes the confusion matrix, accuracy, weighted precision,
+weighted recall, weighted F1-score, and per-class metrics to the JSON output.
+
 ## API Endpoints
 
 ### POST /detect

@@ -1,0 +1,245 @@
+@startuml
+
+!define FIELD_GAP {field} <size:5><color:transparent>.</color></size>
+!define METHOD_GAP {method} <size:5><color:transparent>.</color></size>
+
+top to bottom direction
+scale max 1000*1414
+skinparam backgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 40
+skinparam ArrowFontStyle bold
+hide empty members
+
+<style>
+classDiagram {
+  class {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    FontSize 13
+    LineThickness 2
+    Padding 8
+  }
+  package {
+    BackgroundColor #FFFFFF
+    LineColor #667085
+    FontColor #1F2937
+    LineThickness 2
+    Padding 10
+  }
+}
+</style>
+
+package "Account Management" as AccountManagement {
+  class AccountController {
+    +register()
+    METHOD_GAP
+    +login()
+    METHOD_GAP
+    +logout()
+    METHOD_GAP
+    +updateProfile()
+    METHOD_GAP
+    +changePassword()
+  }
+
+  class Administrator {
+    +id: int
+    FIELD_GAP
+    +username: string
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +passwordHash: string
+    --
+    +authenticate()
+    METHOD_GAP
+    +maintainUsers()
+    METHOD_GAP
+    +maintainCatalogue()
+    METHOD_GAP
+    +updateOrderStatus()
+  }
+
+  class User {
+    +id: int
+    FIELD_GAP
+    +fullName: string
+    FIELD_GAP
+    +username: string
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +role: UserRole
+    FIELD_GAP
+    +artistProfileId: int [0..1]
+    --
+    +authenticate()
+    METHOD_GAP
+    +updateProfile()
+    METHOD_GAP
+    +viewOrders()
+  }
+
+  class ArtistProfile {
+    +id: int
+    FIELD_GAP
+    +name: string
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +education: text
+    FIELD_GAP
+    +award: text
+    --
+    +updateProfile()
+    METHOD_GAP
+    +publishArtwork()
+  }
+
+  enum UserRole {
+    user
+    artist
+    admin
+  }
+
+  Administrator -[hidden]right- ArtistProfile
+
+  AccountController -[thickness=3]down- User : <back:#FFFFFF>manages accounts</back>
+  AccountController -[thickness=3]- Administrator : <back:#FFFFFF>authenticates admin</back>
+  User -[thickness=3]right- UserRole : <back:#FFFFFF>has role</back>
+  User "0..1" -[thickness=3]left- "0..1" ArtistProfile : <back:#FFFFFF>has artist profile</back>
+}
+
+package "Artwork Catalogue" as ArtworkCatalogue {
+  class RecommendationService {
+    +calculateCosineSimilarity()
+    METHOD_GAP
+    +weightedSort()
+    METHOD_GAP
+    +getRecommendedProducts()
+  }
+
+  class ArtworkController {
+    +browseGallery()
+    METHOD_GAP
+    +searchArtworks()
+    METHOD_GAP
+    +viewArtwork()
+    METHOD_GAP
+    +addArtwork()
+    METHOD_GAP
+    +editArtwork()
+    METHOD_GAP
+    +deleteArtwork()
+  }
+
+  class AIDetectionClient {
+    +detectAIGeneratedImage()
+    METHOD_GAP
+    +isAIGenerated()
+  }
+
+  class ArtType {
+    +id: int
+    FIELD_GAP
+    +name: string
+    --
+    +rename()
+  }
+
+  class Artwork {
+    +id: int
+    FIELD_GAP
+    +title: string
+    FIELD_GAP
+    +artistId: int
+    FIELD_GAP
+    +artTypeId: int
+    FIELD_GAP
+    +artMediumId: int
+    FIELD_GAP
+    +sellingPrice: decimal
+    FIELD_GAP
+    +primaryImage: string
+    FIELD_GAP
+    +tags: string
+    FIELD_GAP
+    +isAIGenerated: boolean [0..1]
+    --
+    +updateDetails()
+    METHOD_GAP
+    +replaceImage()
+  }
+
+  class ArtMedium {
+    +id: int
+    FIELD_GAP
+    +name: string
+    --
+    +rename()
+  }
+
+  RecommendationService -[hidden]down- ArtType
+  AIDetectionClient -[hidden]down- ArtMedium
+
+  ArtworkController -[thickness=3]down- Artwork : <back:#FFFFFF>manages artworks</back>
+  ArtworkController -[thickness=3]left- RecommendationService : <back:#FFFFFF>requests recommendations</back>
+  ArtworkController -[thickness=3]right- AIDetectionClient : <back:#FFFFFF>checks images</back>
+  ArtType "1" -[thickness=3]right- "0..*" Artwork : <back:#FFFFFF>classifies</back>
+  Artwork "0..*" -[thickness=3]right- "1" ArtMedium : <back:#FFFFFF>uses</back>
+}
+
+package "Order Management" as OrderManagement {
+  class OrderController {
+    +createPendingOrder()
+    METHOD_GAP
+    +viewCustomerOrders()
+    METHOD_GAP
+    +reviewOrder()
+    METHOD_GAP
+    +approveOrder()
+    METHOD_GAP
+    +cancelOrder()
+  }
+
+  class Order {
+    +id: int
+    FIELD_GAP
+    +orderNumber: string
+    FIELD_GAP
+    +artworkId: int
+    FIELD_GAP
+    +customerEmail: string
+    FIELD_GAP
+    +status: OrderStatus
+    FIELD_GAP
+    +adminRemark: string
+    --
+    +place()
+    METHOD_GAP
+    +approve()
+    METHOD_GAP
+    +cancel()
+  }
+
+  enum OrderStatus {
+    Pending
+    Approved
+    Cancelled
+  }
+
+  OrderController -[thickness=3]right- Order : <back:#FFFFFF>manages orders</back>
+  Order -[thickness=3]right- OrderStatus : <back:#FFFFFF>has status</back>
+}
+
+ArtistProfile "1" -[thickness=3]down- "0..*" Artwork : <back:#FFFFFF>creates</back>
+User "0..1" -[thickness=3]down- "0..*" Order : <back:#FFFFFF>places</back>
+Artwork "1" -[thickness=3]down- "0..*" Order : <back:#FFFFFF>ordered as</back>
+
+@enduml

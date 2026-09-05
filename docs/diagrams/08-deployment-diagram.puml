@@ -1,0 +1,101 @@
+@startuml
+
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam nodesep 45
+skinparam ranksep 60
+
+<style>
+node {
+  BackgroundColor #FFFFFF
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 2
+  Padding 14
+}
+component {
+  BackgroundColor #FFFFFF
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 2
+  Padding 10
+}
+artifact {
+  BackgroundColor #FFFFFF
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 2
+  Padding 10
+}
+database {
+  BackgroundColor #FFFFFF
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 2
+  Padding 10
+}
+storage {
+  BackgroundColor #FFFFFF
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 2
+  Padding 10
+}
+arrow {
+  LineColor #2C3E50
+  FontColor #1F2937
+  LineThickness 1
+}
+</style>
+
+node "Client Device" as ClientDevice {
+  artifact "Web Browser" as Browser
+}
+
+node "Application Host" as ApplicationHost {
+  artifact "Project Source\nHost Directory" as ProjectSource
+
+  node "Docker Engine" as DockerEngine {
+    node "Web Container\nphp:8.4-apache" as WebContainer {
+      component "Apache Web Server\nPort 80" as ApacheServer
+      artifact "Artmandu PHP Application\n/var/www/html" as PHPApplication
+    }
+
+    node "Database Container\nmariadb:11" as DatabaseContainer {
+      component "MariaDB Server\nPort 3306" as MariaDBServer
+      database "AGMS Database\nTables" as Database
+    }
+
+    storage "mariadb_data\nNamed Volume" as DatabaseVolume
+
+    WebContainer -right[hidden]- DatabaseContainer
+    DatabaseContainer -right[hidden]- DatabaseVolume
+  }
+
+  ProjectSource -right[hidden]- DockerEngine
+}
+
+node "Artmandu CNN Host" as CNNHost {
+  node "FastAPI Service\nPort 7070" as FastAPIService {
+    component "FastAPI and Uvicorn" as DetectionAPI
+    component "AI Detector" as AIDetector
+    artifact "Detection Model" as DetectionModel
+  }
+}
+
+ClientDevice -down[hidden]- ApplicationHost
+ApplicationHost -down[hidden]- CNNHost
+
+Browser -down[thickness=1]-> ApacheServer : connects on port 6767
+ProjectSource -down[thickness=1]-> PHPApplication : bind mount
+ApacheServer -down[thickness=1]-> PHPApplication : serves PHP pages
+PHPApplication -right[thickness=1]-> MariaDBServer : "connects on\nport 3306"
+MariaDBServer -down[thickness=1]-> Database : manages tables
+Database -right[thickness=1]-> DatabaseVolume : "persistent\ndata"
+PHPApplication -down[thickness=1]-> DetectionAPI : connects to /detect on port 7070
+DetectionAPI -right[thickness=1]-> AIDetector : "processes\nimage"
+AIDetector -right[thickness=1]-> DetectionModel : "loads\nmodel"
+
+@enduml

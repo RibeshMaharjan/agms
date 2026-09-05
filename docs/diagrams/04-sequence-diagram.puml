@@ -1,0 +1,85 @@
+@startuml
+
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 120
+
+<style>
+sequenceDiagram {
+  actor {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+  }
+  participant {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    Padding 16
+  }
+  database {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+  }
+  arrow {
+    LineColor #2C3E50
+    FontColor #2C3E50
+    FontSize 10
+    LineThickness 1
+  }
+  group {
+    BackgroundColor #FFFFFF
+    LineColor #7F8C8D
+    FontColor #1F2937
+  }
+}
+</style>
+
+actor User
+participant Browser
+participant "Artmandu PHP Application" as App
+database "MySQL Database" as DB
+participant "eSewa Gateway" as Esewa
+
+group Authentication
+  User -> Browser : Open login
+  Browser -> App : Submit credentials
+  App -> DB : Verify account
+  DB -> App : Account and role
+  App -> Browser : Redirect by role
+end
+
+group Dashboard View
+  User -> Browser : Open dashboard
+  Browser -> App : Request dashboard
+  App -> DB : Load dashboard data
+  DB -> App : Dashboard data
+  App -> Browser : Render dashboard
+end
+
+group Artwork Operations
+  User -> Browser : Add, edit, or delete artwork
+  Browser -> App : Submit artwork operation
+  App -> App : Validate input and ownership
+  App -> DB : Store artwork change
+  App -> Browser : Show updated artwork list
+end
+
+group Purchase and Payment
+  User -> Browser : Select Purchase
+  Browser -> App : Submit purchase details
+  App -> App : Authenticate and validate
+  App -> DB : Create Pending order and load price
+  DB -> App : Order saved and price returned
+  App -> Browser : Send signed eSewa form
+  Browser -> Esewa : Submit payment
+  Esewa -> Browser : Return payment result
+  Browser -> App : Forward callback
+  App -> App : Verify status and signature
+  App -> Browser : Show success or failure
+end
+
+@enduml

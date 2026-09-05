@@ -1,0 +1,94 @@
+@startuml
+
+top to bottom direction
+skinparam shadowing false
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 60
+
+<style>
+stateDiagram {
+  state {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    Padding 12
+    FontSize 14
+    LineThickness 2
+  }
+  arrow {
+    LineColor #2C3E50
+    FontColor #2C3E50
+    FontSize 11
+  }
+}
+</style>
+
+state "Unauthenticated" as Unauthenticated
+state "Session Ended" as SessionEnded
+
+[*] -down[thickness=2]-> Unauthenticated
+Unauthenticated -down[thickness=2]-> Authenticated : <back:#FFFFFF>Login</back>
+Authenticated -down[thickness=2]-> SessionEnded : <back:#FFFFFF>Logout</back>
+SessionEnded -down[thickness=2]-> [*]
+
+state "Authenticated System" as Authenticated {
+  state "Dashboard" as Dashboard
+
+  state "Gallery and Purchase" as GalleryPurchase {
+    state "Artwork List" as ArtworkList
+    state "Artwork Details" as ArtworkDetails
+    state "Purchase Form" as PurchaseForm
+    state "Awaiting eSewa" as AwaitingGateway
+    state "Payment Successful" as PaymentSuccessful
+    state "Payment Failed" as PaymentFailed
+    state "My Orders" as MyOrders
+
+    [*] -down[thickness=2]-> ArtworkList
+    ArtworkList -down[thickness=2]-> ArtworkDetails : <back:#FFFFFF>View</back>
+    ArtworkDetails -down[thickness=2]-> PurchaseForm : <back:#FFFFFF>Purchase</back>
+    PurchaseForm -down[thickness=2]-> AwaitingGateway : <back:#FFFFFF>Submit order</back>
+    AwaitingGateway -down[thickness=2]-> PaymentSuccessful : <back:#FFFFFF>Verified</back>
+    AwaitingGateway -down[thickness=2]-> PaymentFailed : <back:#FFFFFF>Failed</back>
+    PaymentSuccessful -down[thickness=2]-> MyOrders : <back:#FFFFFF>View order</back>
+    MyOrders -down[thickness=2]-> [*] : <back:#FFFFFF>Return</back>
+    PaymentFailed -down[thickness=2]-> [*] : <back:#FFFFFF>Return</back>
+  }
+
+  state "Artwork Management" as ArtworkManagement {
+    state "Artwork List" as ManagedArtworkList
+    state "Add Artwork" as AddArtwork
+    state "Edit Artwork" as EditArtwork
+    state "Delete Artwork" as DeleteArtwork
+
+    [*] -down[thickness=2]-> ManagedArtworkList
+    ManagedArtworkList -down[thickness=2]-> AddArtwork : <back:#FFFFFF>Add</back>
+    ManagedArtworkList -down[thickness=2]-> EditArtwork : <back:#FFFFFF>Edit</back>
+    ManagedArtworkList -down[thickness=2]-> DeleteArtwork : <back:#FFFFFF>Delete</back>
+    AddArtwork -down[thickness=2]-> [*] : <back:#FFFFFF>Save</back>
+    EditArtwork -down[thickness=2]-> [*] : <back:#FFFFFF>Update</back>
+    DeleteArtwork -down[thickness=2]-> [*] : <back:#FFFFFF>Confirm</back>
+  }
+
+  state "Order Review" as OrderReview {
+    state "Pending" as PendingOrder
+    state "Approved" as ApprovedOrder
+    state "Cancelled" as CancelledOrder
+
+    [*] -down[thickness=2]-> PendingOrder
+    PendingOrder -down[thickness=2]-> ApprovedOrder : <back:#FFFFFF>Approve</back>
+    PendingOrder -down[thickness=2]-> CancelledOrder : <back:#FFFFFF>Cancel</back>
+    ApprovedOrder -down[thickness=2]-> [*]
+    CancelledOrder -down[thickness=2]-> [*]
+  }
+
+  [*] -down[thickness=2]-> Dashboard
+  Dashboard -down[thickness=2]-> GalleryPurchase : <back:#FFFFFF>Gallery</back>
+  Dashboard -down[thickness=2]-> ArtworkManagement : <back:#FFFFFF>Artwork management</back>
+  Dashboard -down[thickness=2]-> OrderReview : <back:#FFFFFF>Order review</back>
+
+  GalleryPurchase -right[hidden]-> ArtworkManagement
+  ArtworkManagement -right[hidden]-> OrderReview
+}
+
+@enduml

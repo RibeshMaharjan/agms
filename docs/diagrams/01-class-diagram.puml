@@ -1,0 +1,224 @@
+@startuml
+
+!define FIELD_GAP {field} <size:6><color:transparent>.</color></size>
+!define METHOD_GAP {method} <size:6><color:transparent>.</color></size>
+
+top to bottom direction
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam ArrowFontStyle bold
+skinparam class {
+  BorderThickness 2
+}
+
+<style>
+classDiagram {
+  class {
+    Padding 8
+    FontSize 13
+  }
+}
+</style>
+
+skinparam nodesep 35
+skinparam ranksep 45
+hide empty members
+
+package "Accounts" {
+  class Administrator {
+    +id: int
+    FIELD_GAP
+    +adminName: string
+    FIELD_GAP
+    +username: string
+    FIELD_GAP
+    +mobileNumber: long
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +passwordHash: string
+    FIELD_GAP
+    +registeredAt: datetime
+    --
+    +authenticate()
+    METHOD_GAP
+    +maintainUsers()
+    METHOD_GAP
+    +maintainCatalogue()
+    METHOD_GAP
+    +updateOrderStatus()
+  }
+
+  class User {
+    +id: int
+    FIELD_GAP
+    +fullName: string
+    FIELD_GAP
+    +username: string
+    FIELD_GAP
+    +mobileNumber: long
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +passwordHash: string
+    FIELD_GAP
+    +address: string
+    FIELD_GAP
+    +role: UserRole
+    FIELD_GAP
+    +artistProfileId: int [0..1]
+    FIELD_GAP
+    +registeredAt: datetime
+    --
+    +register()
+    METHOD_GAP
+    +authenticate()
+    METHOD_GAP
+    +updateProfile()
+    METHOD_GAP
+    +changePassword()
+    METHOD_GAP
+    +viewOrders()
+  }
+
+  enum UserRole {
+    user
+    artist
+    admin
+  }
+
+  class ArtistProfile {
+    +id: int
+    FIELD_GAP
+    +name: string
+    FIELD_GAP
+    +mobileNumber: long
+    FIELD_GAP
+    +email: string
+    FIELD_GAP
+    +education: text
+    FIELD_GAP
+    +award: text
+    FIELD_GAP
+    +profilePicture: string
+    FIELD_GAP
+    +createdAt: datetime
+    --
+    +updateProfile()
+    METHOD_GAP
+    +publishArtwork()
+    METHOD_GAP
+    +editArtwork()
+    METHOD_GAP
+    +deleteArtwork()
+  }
+
+  Administrator -[hidden]right- User
+  User -[thickness=3]right- UserRole : has role
+  User "0..1" -[thickness=3]right- "0..1" ArtistProfile : has artist profile
+}
+
+package "Artwork Catalogue" {
+  class ArtType {
+    +id: int
+    FIELD_GAP
+    +name: string
+    FIELD_GAP
+    +createdAt: datetime
+    --
+    +rename()
+  }
+
+  class Artwork {
+    +id: int
+    FIELD_GAP
+    +title: string
+    FIELD_GAP
+    +dimension: string
+    FIELD_GAP
+    +orientation: string
+    FIELD_GAP
+    +size: string
+    FIELD_GAP
+    +sellingPrice: decimal
+    FIELD_GAP
+    +description: text
+    FIELD_GAP
+    +primaryImage: string
+    FIELD_GAP
+    +additionalImages: string [0..4]
+    FIELD_GAP
+    +referenceNumber: int
+    FIELD_GAP
+    +tags: string
+    FIELD_GAP
+    +isAIGenerated: boolean [0..1]
+    FIELD_GAP
+    +createdAt: datetime
+    --
+    +updateDetails()
+    METHOD_GAP
+    +replaceImage()
+    METHOD_GAP
+    +findSimilar()
+  }
+
+  class ArtMedium {
+    +id: int
+    FIELD_GAP
+    +name: string
+    FIELD_GAP
+    +createdAt: datetime
+    --
+    +rename()
+  }
+
+  ArtType "1" -[thickness=3]right- "0..*" Artwork : classifies
+  Artwork "0..*" -[thickness=3]right- "1" ArtMedium : uses
+}
+
+package "Ordering" {
+  class Order {
+    +id: int
+    FIELD_GAP
+    +orderNumber: string
+    FIELD_GAP
+    +customerName: string
+    FIELD_GAP
+    +customerEmail: string
+    FIELD_GAP
+    +customerMobile: long
+    FIELD_GAP
+    +deliveryAddress: string
+    FIELD_GAP
+    +orderedAt: datetime
+    FIELD_GAP
+    +status: OrderStatus
+    FIELD_GAP
+    +adminRemark: string
+    FIELD_GAP
+    +remarkUpdatedAt: datetime
+    --
+    +place()
+    METHOD_GAP
+    +approve()
+    METHOD_GAP
+    +cancel()
+  }
+
+  enum OrderStatus {
+    Pending
+    Approved
+    Cancelled
+  }
+
+  Order -[thickness=3]right- OrderStatus : has status
+}
+
+ArtistProfile "1" -[thickness=3]- "0..*" Artwork : creates
+User "0..1" -[thickness=3]- "0..*" Order : places
+Artwork "1" -[thickness=3]- "0..*" Order : ordered as
+
+@enduml

@@ -1,0 +1,117 @@
+@startuml
+
+top to bottom direction
+scale max 1000*1414
+skinparam backgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 40
+skinparam ArrowFontStyle bold
+
+<style>
+objectDiagram {
+  object {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    FontSize 13
+    LineThickness 2
+    Padding 8
+  }
+  package {
+    BackgroundColor #FFFFFF
+    LineColor #667085
+    FontColor #1F2937
+    LineThickness 2
+    Padding 10
+  }
+}
+</style>
+
+package "Account Runtime" as AccountRuntime {
+  object "accountRequest : AccountController" as AccountRequest
+
+  object "customer1 : User" as Customer {
+    id = runtime value
+    <size:5><color:transparent>.</color></size>
+    fullName = "Example Customer"
+    <size:5><color:transparent>.</color></size>
+    email = "customer@example.com"
+    <size:5><color:transparent>.</color></size>
+    role = user
+  }
+
+  object "uma : ArtistProfile" as Artist {
+    id = 11
+    <size:5><color:transparent>.</color></size>
+    name = "uma shanskar shah"
+    <size:5><color:transparent>.</color></size>
+    email = "uma@gmail.com"
+  }
+
+  AccountRequest -[thickness=2]right- Customer : <back:#FFFFFF>manages</back>
+  Customer -[hidden]right- Artist
+}
+
+package "Artwork Catalogue Runtime" as CatalogueRuntime {
+  object "recommendation : RecommendationService" as Recommendation
+  object "artworkRequest : ArtworkController" as ArtworkRequest
+  object "aiCheck : AIDetectionClient" as AICheck
+
+  object "animeArt : ArtType" as ArtType {
+    id = 6
+    <size:5><color:transparent>.</color></size>
+    name = "Anime art"
+  }
+
+  object "dreamscape : Artwork" as Artwork {
+    id = 9
+    <size:5><color:transparent>.</color></size>
+    title = "Dreamscape"
+    <size:5><color:transparent>.</color></size>
+    sellingPrice = NPR 9000
+    <size:5><color:transparent>.</color></size>
+    referenceNumber = 888087012
+    <size:5><color:transparent>.</color></size>
+    isAIGenerated = not checked
+  }
+
+  object "acrylic : ArtMedium" as ArtMedium {
+    id = 2
+    <size:5><color:transparent>.</color></size>
+    name = "Acrylic on canvas"
+  }
+
+  Recommendation -[thickness=2]right- ArtworkRequest : <back:#FFFFFF>used by</back>
+  ArtworkRequest -[thickness=2]right- "uses" AICheck
+  Recommendation -[hidden]down- ArtType
+  ArtworkRequest -[thickness=2]down- Artwork : <back:#FFFFFF>manages</back>
+  AICheck -[hidden]down- ArtMedium
+  ArtType -[thickness=2]right- Artwork : <back:#FFFFFF>classifies</back>
+  Artwork -[thickness=2]right- "uses" ArtMedium
+}
+
+package "Order Runtime" as OrderRuntime {
+  object "orderRequest : OrderController" as OrderRequest
+
+  object "order1 : Order" as Order {
+    orderNumber = generated at runtime
+    <size:5><color:transparent>.</color></size>
+    customerEmail = "customer@example.com"
+    <size:5><color:transparent>.</color></size>
+    artworkId = 9
+    <size:5><color:transparent>.</color></size>
+    status = Pending
+  }
+
+  OrderRequest -[thickness=2]right- Order : <back:#FFFFFF>creates</back>
+}
+
+Artist -[thickness=2]down- Artwork : <back:#FFFFFF>created</back>
+Customer -[thickness=2]down- "placed" Order
+Artwork -[thickness=2]down- Order : <back:#FFFFFF>ordered as</back>
+
+@enduml

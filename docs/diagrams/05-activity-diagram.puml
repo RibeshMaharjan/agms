@@ -1,0 +1,96 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+
+<style>
+activityDiagram {
+  activity {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    Padding 10
+    FontSize 12
+    LineThickness 2
+  }
+  diamond {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+  }
+  arrow {
+    LineColor #2C3E50
+    FontColor #2C3E50
+    FontSize 10
+    LineThickness 1
+  }
+  partition {
+    BackgroundColor #FFFFFF
+    LineColor #7F8C8D
+    FontColor #1F2937
+  }
+}
+</style>
+
+|Customer|
+start
+:Browse gallery;
+:Select artwork;
+
+if (Authenticated?) then (No)
+  :Open login;
+  |Artmandu System|
+  :Verify credentials;
+  if (Credentials valid?) then (No)
+    |Customer|
+    :View login error;
+    stop
+  else (Yes)
+  endif
+else (Yes)
+endif
+
+|Customer|
+:Enter purchase details;
+
+|Artmandu System|
+:Validate purchase request;
+if (Request valid?) then (No)
+  |Customer|
+  :View validation error;
+  stop
+else (Yes)
+  |Artmandu System|
+  :Create Pending order;
+  :Load artwork price;
+  :Sign payment fields;
+endif
+
+|eSewa Gateway|
+:Process payment;
+
+|Artmandu System|
+:Verify payment response;
+if (Payment verified?) then (Yes)
+  :Show payment success;
+else (No)
+  :Show payment failure;
+endif
+
+|Administrator|
+:Open pending order;
+:Review order details;
+if (Approve order?) then (Yes)
+  |Artmandu System|
+  :Save Approved status and remark;
+else (No)
+  |Artmandu System|
+  :Save Cancelled status and remark;
+endif
+
+|Customer|
+:View order status;
+stop
+
+@enduml

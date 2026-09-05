@@ -4,6 +4,49 @@ A full-stack PHP web application for managing and selling art online, with AI-ge
 
 ## Quick Start
 
+### Docker (recommended)
+
+Docker starts the PHP/Apache application and MariaDB, imports the database schema
+on the first run, and stores the database in a named volume.
+
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+Open:
+
+- **Storefront:** http://localhost:6767
+- **Admin Panel:** http://localhost:6767/admin
+- **MariaDB from the host (optional):** `127.0.0.1:3308`
+
+Docker database credentials are `agms` / `agms`, and the database name is
+`agms`. Containers communicate with MariaDB on `mariadb:3306`; port `3308` is
+only for database clients running on the host.
+
+Useful commands:
+
+```bash
+# Follow logs
+docker compose logs -f web mariadb
+
+# Stop the application without deleting database data
+docker compose down
+
+# Rebuild after Dockerfile changes
+docker compose up -d --build
+```
+
+If an existing database volume was created with different credentials, either
+update that MariaDB user's credentials or, if its data is disposable, start
+fresh with `docker compose down -v` followed by `docker compose up -d --build`.
+The `-v` command permanently deletes the Docker-managed database volume.
+
+The CNN detection service is not currently part of the Compose stack. Start it
+separately using the instructions below if AI image detection is required.
+
+### Run without Docker
+
 ### 1. Database Setup
 
 **Linux / macOS:**

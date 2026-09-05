@@ -1,0 +1,88 @@
+@startuml
+
+top to bottom direction
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam ArrowFontStyle bold
+skinparam nodesep 35
+skinparam ranksep 45
+
+<style>
+objectDiagram {
+  object {
+    Padding 8
+    FontSize 13
+    LineThickness 2
+  }
+}
+</style>
+
+package "Runtime Purchase Snapshot" {
+  object "customer1 : User" as customer1 {
+    id = runtime value
+    <size:6><color:transparent>.</color></size>
+    fullName = "Example Customer"
+    <size:6><color:transparent>.</color></size>
+    email = "customer@example.com"
+    <size:6><color:transparent>.</color></size>
+    role = user
+  }
+
+  object "order1 : Order" as order1 {
+    orderNumber = generated at runtime
+    <size:6><color:transparent>.</color></size>
+    customerEmail = "customer@example.com"
+    <size:6><color:transparent>.</color></size>
+    status = Pending
+  }
+
+  customer1 -[thickness=3]right- order1 : places
+}
+
+package "Seeded Catalogue Snapshot" {
+  object "uma : ArtistProfile" as uma {
+    id = 11
+    <size:6><color:transparent>.</color></size>
+    name = "uma shanskar shah"
+    <size:6><color:transparent>.</color></size>
+    email = "uma@gmail.com"
+  }
+
+  object "animeArt : ArtType" as animeArt {
+    id = 6
+    <size:6><color:transparent>.</color></size>
+    name = "Anime art"
+  }
+
+  object "dreamscape : Artwork" as dreamscape {
+    id = 9
+    <size:6><color:transparent>.</color></size>
+    title = "Dreamscape"
+    <size:6><color:transparent>.</color></size>
+    orientation = Landscape
+    <size:6><color:transparent>.</color></size>
+    size = Medium
+    <size:6><color:transparent>.</color></size>
+    sellingPrice = NPR 9000
+    <size:6><color:transparent>.</color></size>
+    referenceNumber = 888087012
+    <size:6><color:transparent>.</color></size>
+    isAIGenerated = not checked
+  }
+
+  object "acrylic : ArtMedium" as acrylic {
+    id = 2
+    <size:6><color:transparent>.</color></size>
+    name = "Acrylic on canvas"
+  }
+
+  animeArt -[thickness=3]right- dreamscape : classifies
+  dreamscape -[thickness=3]right- acrylic : uses
+  uma -[thickness=3]- dreamscape : creates
+}
+
+order1 -[thickness=3]- dreamscape : orders
+
+@enduml

@@ -1,0 +1,113 @@
+@startuml
+
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 55
+
+<style>
+componentDiagram {
+  component {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    FontSize 13
+    LineThickness 2
+    Padding 12
+  }
+  package {
+    BackgroundColor #FFFFFF
+    LineColor #667085
+    FontColor #1F2937
+    LineThickness 2
+    Padding 14
+  }
+  database {
+    BackgroundColor #FFFFFF
+    LineColor #2C3E50
+    FontColor #1F2937
+    LineThickness 2
+    Padding 12
+  }
+  arrow {
+    LineColor #2C3E50
+    FontColor #1F2937
+    LineThickness 1
+  }
+}
+</style>
+
+component "Web Browser" as Browser
+
+package "Presentation Layer" as Presentation {
+  component "Storefront and\nCustomer Pages" as Storefront
+  component "Artist Portal\nPages" as ArtistPages
+  component "Administration\nPages" as AdminPages
+
+  Storefront -right[hidden]- ArtistPages
+  ArtistPages -right[hidden]- AdminPages
+}
+
+package "Application Layer" as Application {
+  component "Customer\nWorkflows" as CustomerWorkflows
+  component "Artist Artwork\nWorkflows" as ArtistWorkflows
+  component "Administrative\nWorkflows" as AdminWorkflows
+  component "Authentication and\nSession Handling" as Authentication
+
+  CustomerWorkflows -right[hidden]- ArtistWorkflows
+  ArtistWorkflows -right[hidden]- AdminWorkflows
+  AdminWorkflows -right[hidden]- Authentication
+}
+
+package "Domain Layer" as Domain {
+  package "Domain Models" as DomainModels {
+    component "Accounts" as Accounts
+    component "Artwork Catalogue" as Catalogue
+    component "Ordering" as Ordering
+
+    Accounts -right[hidden]- Catalogue
+    Catalogue -right[hidden]- Ordering
+  }
+
+  package "Domain Services" as DomainServices {
+    component "Recommendation\nService" as Recommendation
+    component "AI Detection\nClient" as AIDetection
+    component "Payment\nHandoff" as PaymentHandoff
+
+    Recommendation -right[hidden]- AIDetection
+    AIDetection -right[hidden]- PaymentHandoff
+  }
+
+  DomainModels -right[hidden]- DomainServices
+}
+
+package "Infrastructure Layer" as Infrastructure {
+  package "Data Access" as DataAccess {
+    component "MySQLi Database\nConnection" as DatabaseConnection
+    database "MariaDB\nAGMS Database" as MariaDB
+
+    DatabaseConnection -right[hidden]- MariaDB
+  }
+
+  package " " as InternalServices {
+    component "CNN Detection Service\nFastAPI" as CNNService
+  }
+
+  DataAccess -right[hidden]- InternalServices
+}
+
+Browser -down[thickness=1]-> Presentation : HTTP access
+Presentation -down[thickness=1]-> Application : sends requests
+Application -down[thickness=1]-> DomainModels : coordinates operations
+Application -down[thickness=1]-> DomainServices : invokes services
+
+DomainModels -down[thickness=1]-> DataAccess : persists data
+Recommendation -down[thickness=1]-> DatabaseConnection : reads catalogue
+DatabaseConnection -right[thickness=1]-> MariaDB : SQL
+AIDetection -down[thickness=1]-> CNNService : detection request
+
+@enduml
